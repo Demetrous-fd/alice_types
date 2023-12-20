@@ -3,19 +3,21 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
-INTERFACE_NAME = Literal["screen", "account_linking", "audio_player"]
+INTERFACE_NAME = Literal["screen", "account_linking", "audio_player", "payments"]
 
 
 class InterfaceType(str, Enum):
     SCREEN = "screen"
     AUDIO_PLAYER = "audio_player"
     ACCOUNT_LINKING = "account_linking"
+    PAYMENTS = "payments"
 
 
 class Interfaces(BaseModel):
     screen: Optional[dict] = Field(default=None)
     account_linking: Optional[dict] = Field(default=None)
     audio_player: Optional[dict] = Field(default=None)
+    payments: Optional[dict] = Field(default=None)
 
     def available(self) -> List[INTERFACE_NAME]:
         available = []

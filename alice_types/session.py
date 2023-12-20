@@ -46,7 +46,7 @@ class Session(BaseSession):
                     "Если пользователь не авторизован в приложении, свойства user в запросе не будет."
     )
     
-    application: dict = Field(
+    application: Application = Field(
         ..., 
         description="Данные о приложении, с помощью которого пользователь взаимодействует с навыком."
     )

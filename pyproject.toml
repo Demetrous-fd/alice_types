@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alice_types"
+version = "1.0"
+authors = [
+  { name="LazyDeus", email="dimaprodeus@yandex.ru" },
+]
+description = "Pydantic модели для протокола Алисы."
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "pydantic>=2.5.2,<3.0.0",
+  "loguru>=0.7.2,<1.0.0",
+  "orjson>=3.9.10,<4.0.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Demetrous-fd/alice_types"
+"Bug Tracker" = "https://github.com/Demetrous-fd/alice_types/issues"
