@@ -3,7 +3,7 @@ requires = ["setuptools >= 61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "alice_types"
+name = "alice-types"
 version = "1.0"
 authors = [
   { name="LazyDeus", email="dimaprodeus@yandex.ru" },
@@ -23,6 +23,7 @@ dependencies = [
   "pydantic>=2.5.2,<3.0.0",
   "loguru>=0.7.2,<1.0.0",
   "orjson>=3.9.10,<4.0.0",
+  "pytz==2023.3.post1",
 ]
 
 [project.urls]
