@@ -33,4 +33,4 @@ class AnalyticsEvent(BaseModel):
     
 
 class Analytics(BaseModel):
-    events: List[AnalyticsEvent]
+    events: List[AnalyticsEvent] = Field(default_factory=list)
