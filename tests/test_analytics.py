@@ -1,33 +1,36 @@
 import pytest
 
 from alice_types import Analytics, AnalyticsEvent
+import dataset
 
 
-def test_analytics_event():
-    test_valid_input = '{"name":"Test","value":{}}'
-    event = AnalyticsEvent.model_validate_json(test_valid_input)
-    assert event.model_dump_json() == test_valid_input
-    
-    with pytest.raises(ValueError):
-        test_invalid_input = '{"value": {"1": {"2": {"3": {"4": {"5": {"6": {}}}}}}}, "name": "Test"}'
-        AnalyticsEvent.model_validate_json(test_invalid_input)
+@pytest.mark.parametrize(
+    ["obj", "expected", "raise_handler"],
+    [
+        dataset.ANALYTICS_EVENT["ERROR"][0].values(),
+        dataset.ANALYTICS_EVENT["ERROR"][1].values(),
+        dataset.ANALYTICS_EVENT["NOT_EMPTY"][0].values(),
+        dataset.ANALYTICS_EVENT["NOT_EMPTY"][1].values(),
+    ]
+)
+def test_analytics_event(obj, expected, raise_handler):
+    with raise_handler:
+        event = AnalyticsEvent.model_validate_json(obj.string)
+        assert event.model_dump_json().encode() == expected
     
 
-def test_analytics():
-    test_valid_input = '{}'
-    analytics = Analytics.model_validate_json(test_valid_input)
-    assert len(analytics.events) == 0
-    
-    test_valid_input = '{"events": []}'
-    analytics = Analytics.model_validate_json(test_valid_input)
-    assert len(analytics.events) == 0
-    
-    test_valid_input = '{"events": [{"name":"Test","value":{}}]}'
-    analytics = Analytics.model_validate_json(test_valid_input)
-    assert len(analytics.events) == 1
-    
-    with pytest.raises(ValueError):
-        test_invalid_input = '{"events": [{"value": {"1": {"2": {"3": {"4": {"5": {"6": {}}}}}}}, "name": "Test"}]}'
-        Analytics.model_validate_json(test_invalid_input)
-    
-    
+@pytest.mark.parametrize(
+    ["obj", "length", "raise_handler"],
+    [
+        dataset.ANALYTICS["EMPTY"][0].values(),
+        dataset.ANALYTICS["EMPTY"][1].values(),
+        dataset.ANALYTICS["NOT_EMPTY"][0].values(),
+        dataset.ANALYTICS["NOT_EMPTY"][1].values(),
+        dataset.ANALYTICS["ERROR"][0].values(),
+        dataset.ANALYTICS["ERROR"][1].values(),
+    ]
+)
+def test_analytics(obj, length, raise_handler):
+    with raise_handler:
+        analytics = Analytics.model_validate_json(obj.string)
+        assert len(analytics.events) == length

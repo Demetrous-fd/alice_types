@@ -1,27 +1,25 @@
 import pytest
 
-from alice_types import Interfaces, InterfaceType
+from alice_types import Interfaces
+
+import dataset
 
 
 @pytest.mark.parametrize(
-    "test_input,expected",
+    ["obj", "expected", "has", "raise_handler"],
     [
-        (
-                '{"screen": {},"payments": {},"account_linking": {}}',
-                [InterfaceType.SCREEN, InterfaceType.ACCOUNT_LINKING, InterfaceType.PAYMENTS]
-        )
+        dataset.INTERFACES["EMPTY"][0].values(),
+        dataset.INTERFACES["NOT_EMPTY"][0].values(),
+        dataset.INTERFACES["ERROR"][0].values(),
     ]
 )
-def test_interface(test_input, expected):
-    interfaces = Interfaces.model_validate_json(test_input)
+def test_interface(obj, expected, has, raise_handler):
+    with raise_handler:
+        interfaces = Interfaces.model_validate_json(obj.string)
 
-    assert interfaces.available() == expected
+        assert interfaces.available() == expected
 
-    for interface in expected:
-        assert interfaces.has(interface), f"{interfaces=} not contain {interface}"
+        for interface in (*expected, *has):
+            assert interfaces.has(interface), f"{interfaces=} not contain {interface}"
 
-    assert interfaces.has(InterfaceType.AUDIO_PLAYER) is False
-
-    with pytest.raises(ValueError):
-        interfaces.has("nothing")
-        interfaces.has(None)
+        assert interfaces.model_dump_json(exclude_none=True).encode() == obj.string
