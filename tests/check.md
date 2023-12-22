@@ -1,16 +1,15 @@
 - [x] Interfaces
 - [x] Analytics
 - [x] Button
-- [ ] Intent
-- [ ] Markup
-- [ ] Entity
-- [ ] State
-- [ ] Meta
+- [x] Intent
+- [x] Markup
+- [x] Entity
+- [x] +- State
+- [x] Meta
 - [ ] Session
-- [ ] NLU
+- [x] NLU
 - [ ] RequestType
 - [ ] Cards
-- [ ] Session
 - [ ] Directives
 - [ ] AliceRequest
 - [ ] AliceResponse

@@ -15,7 +15,7 @@ class Meta(BaseModel):
     locale: str = Field(..., max_length=64)
     timezone: str = Field(..., max_length=64)
     client_id: str = Field(..., max_length=1024)
-    interfaces: Interfaces = Field(..., default_factory=Interfaces)
+    interfaces: Optional[Interfaces] = Field(default=None)
     flags: Optional[List[POSSIBLE_FLAGS]] = Field(default=None)
 
     @field_validator("timezone", mode="before")  # type: ignore

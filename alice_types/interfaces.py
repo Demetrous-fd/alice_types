@@ -3,6 +3,8 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
+from alice_types.common import AvailableMixin
+
 INTERFACE_NAME = Literal["screen", "account_linking", "audio_player", "payments"]
 
 
@@ -13,19 +15,11 @@ class InterfaceType(str, Enum):
     PAYMENTS = "payments"
 
 
-class Interfaces(BaseModel):
+class Interfaces(BaseModel, AvailableMixin):
     screen: Optional[dict] = Field(default=None)
     account_linking: Optional[dict] = Field(default=None)
     audio_player: Optional[dict] = Field(default=None)
     payments: Optional[dict] = Field(default=None)
-
-    def available(self) -> List[INTERFACE_NAME]:
-        available = []
-        for name, value in self.__dict__.items():
-            if value is not None:
-                available.append(name)
-        
-        return available
     
     def has(self, interface: Union[InterfaceType, INTERFACE_NAME]) -> bool:
         if isinstance(interface, str) and interface not in InterfaceType._value2member_map_:

@@ -3,6 +3,7 @@ import pytest
 from alice_types import Button
 import dataset
 
+
 @pytest.mark.parametrize(
     ["value", "expected", "raise_handler"],
     [
@@ -18,4 +19,4 @@ import dataset
 def test_buttons(value, expected, raise_handler):
     with raise_handler:
         event = Button.model_validate_json(value.string)
-        assert event.model_dump_json(exclude_none=True) == expected
+        assert event.model_dump_json(exclude_none=True).encode() == expected
