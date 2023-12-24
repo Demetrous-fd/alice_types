@@ -1,9 +1,8 @@
-from typing import Optional, Any
+from typing import Optional
 from decimal import Decimal
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field, ConfigDict
 
-from .logger import logger
 
 USER_ID_DEPRECATED_MESSAGE = "Свойство не поддерживается — вместо него следует использовать новое, " \
                              "полностью аналогичное свойство session.application.application_id"
@@ -19,21 +18,18 @@ class Application(BaseModel):
 
 
 class BaseSession(BaseModel):
+    model_config = ConfigDict(
+        json_encoders={
+            Decimal: int
+        }
+    )
+
     message_id: Decimal = Field(..., max_digits=8)
     session_id: str = Field(..., max_length=64)
     user_id: Optional[str] = Field(
         default=None,
         description=USER_ID_DEPRECATED_MESSAGE
     )
-    
-    @model_validator(mode="before") # type: ignore
-    @classmethod
-    def validate_fields(cls, data: Any):
-        if isinstance(data, dict):
-            if data.get("user_id", None):
-                logger.info(USER_ID_DEPRECATED_MESSAGE)
-                
-        return data
     
 
 class Session(BaseSession):

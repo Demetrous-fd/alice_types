@@ -13,5 +13,5 @@ import dataset
 )
 def test_meta(value, expected, raise_handler):
     with raise_handler:
-        event = Meta.model_validate_json(value.string)
-        assert event.model_dump_json(exclude_none=True).encode() == expected
+        meta = Meta.model_validate_json(value.string)
+        assert meta.model_dump_json(exclude_none=True).encode() == expected

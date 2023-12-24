@@ -6,7 +6,7 @@
 - [x] Entity
 - [x] +- State
 - [x] Meta
-- [ ] Session
+- [x] Session
 - [x] NLU
 - [ ] RequestType
 - [ ] Cards

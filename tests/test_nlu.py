@@ -14,5 +14,5 @@ import dataset
 )
 def test_nlu(value, expected, raise_handler):
     with raise_handler:
-        event = NaturalLanguageUnderstanding.model_validate_json(value.string)
-        assert event.model_dump_json(exclude_none=True).encode() == expected
+        nlu = NaturalLanguageUnderstanding.model_validate_json(value.string)
+        assert nlu.model_dump_json(exclude_none=True).encode() == expected

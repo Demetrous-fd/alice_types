@@ -7,10 +7,8 @@ import dataset
 @pytest.mark.parametrize(
     ["value", "expected", "raise_handler"],
     [
-        dataset.INTENTS["EMPTY"][0].values(),
-        dataset.INTENTS["NOT_EMPTY"][0].values(),
-        dataset.INTENTS["NOT_EMPTY"][1].values(),
-        dataset.INTENTS["NOT_EMPTY"][2].values(),
+        *[data.values() for data in dataset.INTENTS["EMPTY"]],
+        *[data.values() for data in dataset.INTENTS["NOT_EMPTY"]],
     ]
 )
 def test_intents(value, expected, raise_handler):

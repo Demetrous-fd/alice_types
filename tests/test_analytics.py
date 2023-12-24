@@ -7,10 +7,8 @@ import dataset
 @pytest.mark.parametrize(
     ["obj", "expected", "raise_handler"],
     [
-        dataset.ANALYTICS_EVENT["ERROR"][0].values(),
-        dataset.ANALYTICS_EVENT["ERROR"][1].values(),
-        dataset.ANALYTICS_EVENT["NOT_EMPTY"][0].values(),
-        dataset.ANALYTICS_EVENT["NOT_EMPTY"][1].values(),
+        *[data.values() for data in dataset.ANALYTICS_EVENT["NOT_EMPTY"]],
+        *[data.values() for data in dataset.ANALYTICS_EVENT["ERROR"]],
     ]
 )
 def test_analytics_event(obj, expected, raise_handler):
@@ -20,17 +18,15 @@ def test_analytics_event(obj, expected, raise_handler):
     
 
 @pytest.mark.parametrize(
-    ["obj", "length", "raise_handler"],
+    ["obj", "length", "expected", "raise_handler"],
     [
-        dataset.ANALYTICS["EMPTY"][0].values(),
-        dataset.ANALYTICS["EMPTY"][1].values(),
-        dataset.ANALYTICS["NOT_EMPTY"][0].values(),
-        dataset.ANALYTICS["NOT_EMPTY"][1].values(),
-        dataset.ANALYTICS["ERROR"][0].values(),
-        dataset.ANALYTICS["ERROR"][1].values(),
+        *[data.values() for data in dataset.ANALYTICS["EMPTY"]],
+        *[data.values() for data in dataset.ANALYTICS["NOT_EMPTY"]],
+        *[data.values() for data in dataset.ANALYTICS["ERROR"]],
     ]
 )
-def test_analytics(obj, length, raise_handler):
+def test_analytics(obj, length, expected, raise_handler):
     with raise_handler:
         analytics = Analytics.model_validate_json(obj.string)
         assert len(analytics.events) == length
+        assert analytics.model_dump_json().encode() == expected

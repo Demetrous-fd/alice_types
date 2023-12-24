@@ -7,13 +7,8 @@ import dataset
 @pytest.mark.parametrize(
     ["value", "expected", "raise_handler"],
     [
-        dataset.BUTTON["NOT_EMPTY"][0].values(),
-        dataset.BUTTON["NOT_EMPTY"][1].values(),
-        dataset.BUTTON["NOT_EMPTY"][2].values(),
-        dataset.BUTTON["ERROR"][0].values(),
-        dataset.BUTTON["ERROR"][1].values(),
-        dataset.BUTTON["ERROR"][2].values(),
-        dataset.BUTTON["ERROR"][3].values(),
+        *[data.values() for data in dataset.BUTTON["NOT_EMPTY"]],
+        *[data.values() for data in dataset.BUTTON["ERROR"]],
     ]
 )
 def test_buttons(value, expected, raise_handler):

@@ -7,10 +7,9 @@ import dataset
 @pytest.mark.parametrize(
     ["obj", "expected", "raise_handler"],
     [
-        dataset.MARKUP["ERROR"][0].values(),
-        dataset.MARKUP["EMPTY"][0].values(),
-        dataset.MARKUP["EMPTY"][1].values(),
-        dataset.MARKUP["NOT_EMPTY"][0].values(),
+        *[data.values() for data in dataset.MARKUP["EMPTY"]],
+        *[data.values() for data in dataset.MARKUP["NOT_EMPTY"]],
+        *[data.values() for data in dataset.MARKUP["ERROR"]],
     ]
 )
 def test_markup(obj, expected, raise_handler):

@@ -9,22 +9,24 @@ from alice_types import entity
 
 
 class ValueField:
-    def __init__(self, obj: dict):
+    def __init__(self, obj: dict, json_string: Optional[bytes] = None):
         self.obj = obj
-        self.string = orjson.dumps(obj)
+        self.string = orjson.dumps(obj) if json_string is None else json_string
 
 
 def create_ref() -> Callable:
     objects = dict()
+
     def wrapper(key: str, obj: Optional[Any] = None) -> Any:
         nonlocal objects
         if obj is not None:
             objects[key] = obj
-        
+
         elif value := objects.get(key, None):
             obj = value
-        
+
         return obj
+
     return wrapper
 
 
@@ -58,14 +60,17 @@ ANALYTICS_EVENT = {
         {
             "value": ref(
                 key="ANALYTICS_EVENT:NOT_EMPTY-1",
-                obj=ValueField({"name": "Test"})
+                obj=ValueField(
+                    obj={"name": "Test"},
+                    json_string=orjson.dumps({"name": "Test", "value": {}})
+                )
             ),
-            "expected": orjson.dumps({"name": "Test", "value": {}}),
+            "expected": ref("ANALYTICS_EVENT:NOT_EMPTY-1").string,
             "raise_handler": does_not_raise()
         },
         {
             "value": ref(
-                key="ANALYTICS_EVENT:NOT_EMPTY-2", 
+                key="ANALYTICS_EVENT:NOT_EMPTY-2",
                 obj=ValueField({"name": "Test", "value": {}})
             ),
             "expected": ref("ANALYTICS_EVENT:NOT_EMPTY-2").string,
@@ -78,18 +83,20 @@ ANALYTICS = {
     "EMPTY": [
         {
             "value": ref(
-                key="ANALYTICS:EMPTY-1", 
-                obj=ref("EMPTY")
+                key="ANALYTICS:EMPTY-1",
+                obj=ValueField({"events": []})
             ),
             "length": 0,
+            "expected": ref("ANALYTICS:EMPTY-1").string,
             "raise_handler": does_not_raise()
         },
         {
             "value": ref(
-                key="ANALYTICS:EMPTY-2", 
-                obj=ValueField({"events": []})
+                key="ANALYTICS:EMPTY-2",
+                obj=ref("EMPTY")
             ),
             "length": 0,
+            "expected": ref("ANALYTICS:EMPTY-1").string,
             "raise_handler": does_not_raise()
         },
 
@@ -97,19 +104,23 @@ ANALYTICS = {
     "NOT_EMPTY": [
         {
             "value": ref(
-                key="ANALYTICS:NOT_EMPTY-1", 
-                obj=ValueField({
-                    "events": [
-                        ref("ANALYTICS_EVENT:NOT_EMPTY-1").obj
-                    ]
-                })
+                key="ANALYTICS:NOT_EMPTY-1",
+                obj=ValueField(
+                    obj={
+                        "events": [
+                            ref("ANALYTICS_EVENT:NOT_EMPTY-1").obj
+                        ]
+                    },
+                    json_string=f'{{"events":[{ref("ANALYTICS_EVENT:NOT_EMPTY-1").string.decode()}]}}'.encode()
+                )
             ),
             "length": 1,
+            "expected": ref("ANALYTICS:NOT_EMPTY-1").string,
             "raise_handler": does_not_raise()
         },
         {
             "value": ref(
-                key="ANALYTICS:EMPTY-2", 
+                key="ANALYTICS:NOT_EMPTY-2",
                 obj=ValueField({
                     "events": [
                         ref("ANALYTICS_EVENT:NOT_EMPTY-2").obj
@@ -117,13 +128,14 @@ ANALYTICS = {
                 })
             ),
             "length": 1,
+            "expected": ref("ANALYTICS:NOT_EMPTY-2").string,
             "raise_handler": does_not_raise()
         },
     ],
     "ERROR": [
         {
             "value": ref(
-                key="ANALYTICS:ERROR-1", 
+                key="ANALYTICS:ERROR-1",
                 obj=ValueField({
                     "events": [
                         ref("ANALYTICS_EVENT:ERROR-1").obj
@@ -131,11 +143,12 @@ ANALYTICS = {
                 }),
             ),
             "length": None,
+            "expected": None,
             "raise_handler": pytest.raises(ValueError)
         },
         {
             "value": ref(
-                key="ANALYTICS:ERROR-2", 
+                key="ANALYTICS:ERROR-2",
                 obj=ValueField({
                     "events": [
                         ref("ANALYTICS_EVENT:ERROR-2").obj
@@ -143,6 +156,7 @@ ANALYTICS = {
                 }),
             ),
             "length": None,
+            "expected": None,
             "raise_handler": pytest.raises(ValueError)
         }
     ]
@@ -152,7 +166,7 @@ INTERFACES = {
     "EMPTY": [
         {
             "value": ref(
-                key="INTERFACES:EMPTY-1", 
+                key="INTERFACES:EMPTY-1",
                 obj=ref("EMPTY")
             ),
             "expected": [],
@@ -163,7 +177,7 @@ INTERFACES = {
     "NOT_EMPTY": [
         {
             "value": ref(
-                key="INTERFACES:NOT_EMPTY-1", 
+                key="INTERFACES:NOT_EMPTY-1",
                 obj=ValueField({"screen": {}, "account_linking": {}, "payments": {}})
             ),
             "expected": [InterfaceType.SCREEN, InterfaceType.ACCOUNT_LINKING, InterfaceType.PAYMENTS],
@@ -186,8 +200,8 @@ BUTTON = {
         {
             "value": ValueField({"title": "Test"}),
             "expected": orjson.dumps({
-                "title":"Test",
-                "payload":{},
+                "title": "Test",
+                "payload": {},
                 "hide": False
             }),
             "raise_handler": does_not_raise()
@@ -198,8 +212,8 @@ BUTTON = {
                 "hide": True
             }),
             "expected": orjson.dumps({
-                "title":"Test",
-                "payload":{},
+                "title": "Test",
+                "payload": {},
                 "hide": True
             }),
             "raise_handler": does_not_raise()
@@ -210,9 +224,9 @@ BUTTON = {
                 "url": "https://yandex.ru/dev/dialogs/alice/doc"
             }),
             "expected": orjson.dumps({
-                "title":"Test",
-                "url":"https://yandex.ru/dev/dialogs/alice/doc",
-                "payload":{},
+                "title": "Test",
+                "url": "https://yandex.ru/dev/dialogs/alice/doc",
+                "payload": {},
                 "hide": False
             }),
             "raise_handler": does_not_raise()
@@ -299,7 +313,7 @@ INTENTS = {
             ),
             "expected": ref("INTENTS:EMPTY-1").string,
             "raise_handler": does_not_raise()
-        },    
+        },
     ],
     "NOT_EMPTY": [
         {
@@ -353,19 +367,19 @@ INTENTS = {
             ),
             "expected": ref("INTENTS:NOT_EMPTY-2").string,
             "raise_handler": does_not_raise()
-        }, 
+        },
         {
             "value": ref(
                 key="INTENTS:NOT_EMPTY-3",
                 obj=ValueField({
                     "slots": {
                         "what": {
-                        "type": SlotsType.YANDEX_STRING,
-                        "value": "свет"
+                            "type": SlotsType.YANDEX_STRING,
+                            "value": "свет"
                         },
                         "where": {
-                        "type": SlotsType.YANDEX_STRING,
-                        "value": "на кухне"
+                            "type": SlotsType.YANDEX_STRING,
+                            "value": "на кухне"
                         }
                     }
                 })
@@ -395,7 +409,7 @@ ENTITY_VALUE = {
             ],
             "type": entity.EntityValueFio,
             "raise_handler": does_not_raise()
-        }, 
+        },
         {
             "value": ref(
                 key="ENTITY_VALUE:NOT_EMPTY:FIO-2",
@@ -411,7 +425,7 @@ ENTITY_VALUE = {
             ],
             "type": entity.EntityValueFio,
             "raise_handler": does_not_raise()
-        }, 
+        },
         {
             "value": ref(
                 key="ENTITY_VALUE:NOT_EMPTY:FIO-3",
@@ -425,7 +439,7 @@ ENTITY_VALUE = {
             ],
             "type": entity.EntityValueFio,
             "raise_handler": does_not_raise()
-        }, 
+        },
         {
             "value": ref(
                 key="ENTITY_VALUE:NOT_EMPTY:GEO-1",
@@ -445,7 +459,7 @@ ENTITY_VALUE = {
             ],
             "type": entity.EntityValueGeo,
             "raise_handler": does_not_raise()
-        }, 
+        },
         {
             "value": ref(
                 key="ENTITY_VALUE:NOT_EMPTY:GEO-2",
@@ -459,7 +473,7 @@ ENTITY_VALUE = {
             ],
             "type": entity.EntityValueGeo,
             "raise_handler": does_not_raise()
-        }, 
+        },
         {
             "value": ref(
                 key="ENTITY_VALUE:NOT_EMPTY:DATETIME-1",
@@ -475,7 +489,7 @@ ENTITY_VALUE = {
             ],
             "type": entity.EntityValueDatetime,
             "raise_handler": does_not_raise()
-        }, 
+        },
         {
             "value": ref(
                 key="ENTITY_VALUE:NOT_EMPTY:DATETIME-2",
@@ -497,7 +511,7 @@ ENTITY_VALUE = {
             ],
             "type": entity.EntityValueDatetime,
             "raise_handler": does_not_raise()
-        }, 
+        },
         {
             "value": ref(
                 key="ENTITY_VALUE:NOT_EMPTY:NUMBER-1",
@@ -511,7 +525,7 @@ ENTITY_VALUE = {
             ],
             "type": entity.EntityValueNumber,
             "raise_handler": does_not_raise()
-        }, 
+        },
         {
             "value": ref(
                 key="ENTITY_VALUE:NOT_EMPTY:NUMBER-2",
@@ -557,7 +571,7 @@ ENTITY = {
                         "start": 3,
                         "end": 6
                     },
-                    
+
                     "value": ref("ENTITY_VALUE:NOT_EMPTY:FIO-1").obj,
                 })
             ),
@@ -757,7 +771,7 @@ META = {
     "NOT_EMPTY": [
         {
             "value": ref(
-                key="META:NOT_EMPTY-1", 
+                key="META:NOT_EMPTY-1",
                 obj=ValueField({
                     "locale": "ru-RU",
                     "timezone": "Europe/Moscow",
@@ -771,7 +785,7 @@ META = {
         },
         {
             "value": ref(
-                key="META:NOT_EMPTY-2", 
+                key="META:NOT_EMPTY-2",
                 obj=ValueField({
                     "locale": "eu-ES",
                     "timezone": "Europe/Dublin",
@@ -784,7 +798,7 @@ META = {
         },
         {
             "value": ref(
-                key="META:NOT_EMPTY-3", 
+                key="META:NOT_EMPTY-3",
                 obj=ValueField({
                     "locale": "eu",
                     "timezone": "America/New_York",
@@ -797,7 +811,7 @@ META = {
         },
         {
             "value": ref(
-                key="META:NOT_EMPTY-4", 
+                key="META:NOT_EMPTY-4",
                 obj=ValueField({
                     "locale": "eu",
                     "timezone": "America/New_York",
@@ -814,7 +828,7 @@ META = {
     "ERROR": [
         {
             "value": ref(
-                key="META:ERROR-1", 
+                key="META:ERROR-1",
                 obj=ValueField({
                     "locale": "eu" * 33,
                     "timezone": "America" * 10,
@@ -937,7 +951,7 @@ NLU = {
                 obj=ValueField({
                     "tokens": [1, 2, 3],
                     "entities": [
-                        ref("INTENTS:NOT_EMPTY-3").obj    
+                        ref("INTENTS:NOT_EMPTY-3").obj
                     ],
                     "intents": {
                         "turn.on": ref("ENTITY:NOT_EMPTY:DICT-1").obj
@@ -1027,6 +1041,213 @@ STATE = {
                 })
             ),
             "expected": ref("STATE:ERROR-1").string,
+            "raise_handler": pytest.raises(ValueError)
+        },
+    ]
+}
+
+SESSION_USER = {
+    "NOT_EMPTY": [
+        {
+            "value": ref(
+                key="SESSION_USER:NOT_EMPTY-1",
+                obj=ValueField({
+                    "user_id": "6C91DA5198D1758C6A9F63A7C5CDDF09359F683B13A18A151FBF4C8B092BB0C2"
+                })
+            ),
+            "expected": ref("SESSION_USER:NOT_EMPTY-1").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="SESSION_USER:NOT_EMPTY-2",
+                obj=ValueField({
+                    "user_id": "6C91DA5198D1758C6A9F63A7C5CDDF09359F683B13A18A151FBF4C8B092BB0C2",
+                    "access_token": "AgAAAAAB4vpbAAApoR1oaCd5yR6eiXSHqOGT8dT"
+                })
+            ),
+            "expected": ref("SESSION_USER:NOT_EMPTY-2").string,
+            "raise_handler": does_not_raise()
+        },
+    ],
+    "ERROR": [
+        {
+            "value": ref(
+                key="SESSION_USER:ERROR-1",
+                obj=ref("EMPTY")
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="SESSION_USER:ERROR-2",
+                obj=ValueField({
+                    "user_id": None,
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+    ]
+}
+
+SESSION_APPLICATION = {
+    "NOT_EMPTY": [
+        {
+            "value": ref(
+                key="SESSION_APPLICATION:NOT_EMPTY-1",
+                obj=ValueField({
+                    "application_id": "47C73714B580ED2469056E71081159529FFC676A4E5B059D629A819E857DC2F8"
+                })
+            ),
+            "expected": ref("SESSION_APPLICATION:NOT_EMPTY-1").string,
+            "raise_handler": does_not_raise()
+        },
+    ],
+    "ERROR": [
+        {
+            "value": ref(
+                key="SESSION_APPLICATION:ERROR-1",
+                obj=ref("EMPTY")
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="SESSION_APPLICATION:ERROR-2",
+                obj=ValueField({
+                    "application_id": None,
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="SESSION_APPLICATION:ERROR-3",
+                obj=ValueField({
+                    "application_id": "a" * 96,
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+    ]
+}
+
+SESSION = {
+    "NOT_EMPTY": [
+        {
+            "value": ref(
+                key="SESSION:NOT_EMPTY-1",
+                obj=ValueField({
+                    "message_id": 0,
+                    "session_id": "2eac4854-fce721f3-b845abba-20d60",
+                    "user_id": "47C73714B580ED2469056E71081159529FFC676A4E5B059D629A819E857DC2F8",
+                    "new": True,
+                    "skill_id": "3ad36498-f5rd-4079-a14b-788652932056",
+                    "user": ref("SESSION_USER:NOT_EMPTY-1").obj,
+                    "application": ref("SESSION_APPLICATION:NOT_EMPTY-1").obj,
+                })
+            ),
+            "expected": ref("SESSION:NOT_EMPTY-1").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="SESSION:NOT_EMPTY-2",
+                obj=ValueField({
+                    "message_id": 42,
+                    "session_id": "2eac4854-fce721f3-b845abba-20d60",
+                    "user_id": "47C73714B580ED2469056E71081159529FFC676A4E5B059D629A819E857DC2F8",
+                    "new": False,
+                    "skill_id": "3ad36498-f5rd-4079-a14b-788652932056",
+                    "user": ref("SESSION_USER:NOT_EMPTY-2").obj,
+                    "application": ref("SESSION_APPLICATION:NOT_EMPTY-1").obj,
+                })
+            ),
+            "expected": ref("SESSION:NOT_EMPTY-2").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            # User not authorized in yandex
+            "value": ref(
+                key="SESSION:NOT_EMPTY-3",
+                obj=ValueField({
+                    "message_id": 42,
+                    "session_id": "2eac4854-fce721f3-b845abba-20d60",
+                    "user_id": "47C73714B580ED2469056E71081159529FFC676A4E5B059D629A819E857DC2F8",
+                    "new": False,
+                    "skill_id": "3ad36498-f5rd-4079-a14b-788652932056",
+                    "application": ref("SESSION_APPLICATION:NOT_EMPTY-1").obj,
+                })
+            ),
+            "expected": ref("SESSION:NOT_EMPTY-3").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="SESSION:NOT_EMPTY-4",
+                obj=ValueField({
+                    "message_id": 12345678,
+                    "session_id": "2eac4854-fce721f3-b845abba-20d60",
+                    "user_id": "47C73714B580ED2469056E71081159529FFC676A4E5B059D629A819E857DC2F8",
+                    "new": False,
+                    "skill_id": "3ad36498-f5rd-4079-a14b-788652932056",
+                    "application": ref("SESSION_APPLICATION:NOT_EMPTY-1").obj,
+                })
+            ),
+            "expected": ref("SESSION:NOT_EMPTY-4").string,
+            "raise_handler": does_not_raise()
+        },
+    ],
+    "ERROR": [
+        {
+            "value": ref(
+                key="SESSION:ERROR-1",
+                obj=ref("EMPTY")
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="SESSION:ERROR-2",
+                obj=ref("EMPTY")
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="SESSION:ERROR-3",
+                obj=ValueField({
+                    "message_id": 123456789,
+                    "session_id": "2eac4854-fce721f3-b845abba-20d60" * 2,
+                    "user_id": "47C73714B580ED2469056E71081159529FFC676A4E5B059D629A819E857DC2F8" * 2,
+                    "new": False,
+                    "skill_id": "3ad36498-f5rd-4079-a14b-788652932056" * 2,
+                    "application": ref("SESSION_APPLICATION:ERROR-2").obj,
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="SESSION:ERROR-4",
+                obj=ValueField({
+                    "message_id": 123456789,
+                    "session_id": "2eac4854-fce721f3-b845abba-20d60" * 2,
+                    "user_id": "47C73714B580ED2469056E71081159529FFC676A4E5B059D629A819E857DC2F8" * 2,
+                    "user": ref("SESSION_USER:ERROR-2").obj,
+                    "skill_id": "3ad36498-f5rd-4079-a14b-788652932056" * 2,
+                    "application": ref("SESSION_APPLICATION:ERROR-3").obj,
+                })
+            ),
+            "expected": None,
             "raise_handler": pytest.raises(ValueError)
         },
     ]

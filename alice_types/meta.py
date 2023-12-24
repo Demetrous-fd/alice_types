@@ -21,7 +21,6 @@ class Meta(BaseModel):
     @field_validator("timezone", mode="before")  # type: ignore
     @classmethod
     def validate_timezone(cls, value):
-        print(value)
         if value not in pytz.all_timezones:
             raise ValueError(f"Timezone: {value} not exists or not valid")
         return value
@@ -29,7 +28,6 @@ class Meta(BaseModel):
     @field_validator("locale", mode="before")  # type: ignore
     @classmethod
     def validate_locale(cls, value):
-        print(value)
         if value.replace("-", "_").lower() not in locale.locale_alias:
             raise ValueError(f"Locale: {value} not exists or not valid")
         return value

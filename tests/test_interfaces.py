@@ -8,9 +8,9 @@ import dataset
 @pytest.mark.parametrize(
     ["obj", "expected", "has", "raise_handler"],
     [
-        dataset.INTERFACES["EMPTY"][0].values(),
-        dataset.INTERFACES["NOT_EMPTY"][0].values(),
-        dataset.INTERFACES["ERROR"][0].values(),
+        *[data.values() for data in dataset.INTERFACES["EMPTY"]],
+        *[data.values() for data in dataset.INTERFACES["NOT_EMPTY"]],
+        *[data.values() for data in dataset.INTERFACES["ERROR"]],
     ]
 )
 def test_interface(obj, expected, has, raise_handler):
