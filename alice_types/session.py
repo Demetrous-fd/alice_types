@@ -1,7 +1,7 @@
 from typing import Optional
 from decimal import Decimal
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, field_serializer
 
 
 USER_ID_DEPRECATED_MESSAGE = "Свойство не поддерживается — вместо него следует использовать новое, " \
@@ -18,18 +18,16 @@ class Application(BaseModel):
 
 
 class BaseSession(BaseModel):
-    model_config = ConfigDict(
-        json_encoders={
-            Decimal: int
-        }
-    )
-
     message_id: Decimal = Field(..., max_digits=8)
     session_id: str = Field(..., max_length=64)
     user_id: Optional[str] = Field(
         default=None,
         description=USER_ID_DEPRECATED_MESSAGE
     )
+    
+    @field_serializer("message_id")
+    def serialize_message_id(self, message_id: Decimal) -> int:
+        return int(message_id)
     
 
 class Session(BaseSession):
