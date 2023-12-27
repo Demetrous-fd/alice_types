@@ -1,7 +1,7 @@
 from typing import Optional
 from decimal import Decimal
 
-from pydantic import BaseModel, Field, ConfigDict, field_serializer
+from pydantic import BaseModel, Field, field_serializer
 
 
 USER_ID_DEPRECATED_MESSAGE = "Свойство не поддерживается — вместо него следует использовать новое, " \

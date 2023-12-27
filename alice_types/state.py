@@ -1,8 +1,24 @@
-from pydantic import BaseModel, Field
+from typing import Type, Union
+
+from pydantic import BaseModel, Field, ConfigDict, SerializeAsAny
+
+from alice_types.common import DynamicFieldsType
 
 
-# TODO: Add support custom models
-class State(BaseModel):
-    session: dict = Field(default_factory=dict)
-    user: dict = Field(default_factory=dict)
-    application: dict = Field(default_factory=dict)
+class State(DynamicFieldsType):
+    model_config = ConfigDict(extra="allow")
+    session: SerializeAsAny[Union[dict, BaseModel]] = Field(default_factory=dict)
+    user: SerializeAsAny[Union[dict, BaseModel]] = Field(default_factory=dict)
+    application: SerializeAsAny[Union[dict, BaseModel]] = Field(default_factory=dict)
+
+    @classmethod
+    def set_session_model(cls, model: Type[BaseModel]) -> None:
+        cls.extend_field_type("session", model)
+
+    @classmethod
+    def set_user_model(cls, model: Type[BaseModel]) -> None:
+        cls.extend_field_type("user", model)
+
+    @classmethod
+    def set_application_model(cls, model: Type[BaseModel]) -> None:
+        cls.extend_field_type("application", model)
