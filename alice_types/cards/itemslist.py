@@ -25,5 +25,5 @@ class Footer(BaseModel):
 class ItemsList(BaseModel):
     type: Literal[CardType.ITEMS_LIST] = Field(default=CardType.ITEMS_LIST, frozen=True)
     header: Optional[Header] = Field(default=None)
-    items: conlist(Item, min_length=1, max_length=5)  # type: ignore
+    items: conlist(Item, min_length=1, max_length=5) = Field(...) # type: ignore
     footer: Optional[Footer] = Field(default=None)

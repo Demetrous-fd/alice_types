@@ -4,7 +4,7 @@
 - [x] Intent
 - [x] Markup
 - [x] Entity
-- [x] +- State
+- [x] State
 - [x] Meta
 - [x] Session
 - [x] NLU

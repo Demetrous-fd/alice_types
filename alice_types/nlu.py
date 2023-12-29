@@ -14,5 +14,5 @@ class NaturalLanguageUnderstanding(BaseModel):
         entity.EntityDatetime,
         entity.EntityFio,
         entity.EntityBase
-    ]] = Field(default_factory=list)
-    intents: dict[Union[IntentType, str], Intent] = Field(default_factory=dict)
+    ]] = Field(default_factory=list) # TODO: DynamicFieldsTypeMixin + tests
+    intents: dict[Union[IntentType, str], Intent] = Field(default_factory=dict) # TODO: DynamicFieldsTypeMixin + tests

@@ -1,4 +1,4 @@
-from typing import Optional, Union
+from typing import Optional, Union, Literal
 from enum import Enum
 
 from pydantic import BaseModel, Field
@@ -12,8 +12,15 @@ class RequestType(str, Enum):
     BUTTON_PRESSED = "ButtonPressed"
 
 
+# TODO: Посмотреть ответы от Алисы
+class RequestButtonPressed(BaseModel):
+    type: Literal[RequestType.BUTTON_PRESSED] = Field(...)
+    nlu: Optional[NaturalLanguageUnderstanding] = Field(default=None)
+    payload: Optional[dict] = Field(default=None)
+
+
 class RequestSimpleUtterance(BaseModel):
-    type: RequestType
+    type: Literal[RequestType.SIMPLE_UTTERANCE] = Field(...)
     nlu: Optional[NaturalLanguageUnderstanding] = Field(default=None)
     payload: Optional[dict] = Field(default=None)
     command: Optional[str] = Field(default=None)  # Can be none if payload passed
@@ -25,8 +32,8 @@ class RequestSimpleUtterance(BaseModel):
 
 
 class AliceRequest(BaseModel):
-    meta: Meta
-    request: Union[RequestSimpleUtterance, RequestShow, RequestAudio, RequestPurchase]
-    session: Session
-    state: State
-    version: str
+    meta: Meta = Field(...)
+    request: Union[RequestButtonPressed, RequestSimpleUtterance, RequestShow, RequestAudio, RequestPurchase] = Field(...)
+    session: Session = Field(...)
+    state: State = Field(...)
+    version: str = Field(...)

@@ -4,8 +4,7 @@ from typing import Callable, Any, Optional
 import pytest
 import orjson
 
-from alice_types import InterfaceType, SlotsType, State
-from alice_types import entity
+from alice_types import InterfaceType, SlotsType, State, entity, request
 
 
 class ValueField:
@@ -1251,4 +1250,195 @@ SESSION = {
             "raise_handler": pytest.raises(ValueError)
         },
     ]
+}
+
+REQUEST_SHOW = {
+    "ERROR": [
+        {
+            "value": ref(
+                key="REQUEST_SHOW:ERROR-1",
+                obj=ref("EMPTY")
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="REQUEST_SHOW:ERROR-2",
+                obj=ValueField({
+                    "type": "Show.Pull"
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="REQUEST_SHOW:ERROR-3",
+                obj=ValueField({
+                    "show_type": "MORNING",
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+    ],
+    "NOT_EMPTY": [
+        {
+            "value": ref(
+                key="REQUEST_SHOW:NOT_EMPTY-1",
+                obj=ValueField({
+                    "type": "Show.Pull",
+                    "show_type": "MORNING",
+                })
+            ),
+            "expected": ref("REQUEST_SHOW:NOT_EMPTY-1").string,
+            "raise_handler": does_not_raise()
+        },
+    ],
+}
+
+
+REQUEST_PURCHASE = {
+    "ERROR": [
+        {
+            "value": ref(
+                key="REQUEST_PURCHASE:ERROR-1",
+                obj=ref("EMPTY")
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="REQUEST_PURCHASE:ERROR-2",
+                obj=ValueField({
+                    "type": "Purchase.Other",
+                    "purchase_request_id": "d432de19be8347d09f656d9fe966e2f9",
+                    "purchase_token": "d432de19be8347d09f656d9fe966e2f9",
+                    "order_id": "eeb59d64-9e6a-11ea-bb37-0242ac130002",
+                    "purchase_timestamp": 1590399311.00,
+                    "purchase_payload": None,
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+    ],
+    "NOT_EMPTY": [
+        {
+            "value": ref(
+                key="REQUEST_PURCHASE:NOT_EMPTY-1",
+                obj=ValueField({
+                    "type": "Purchase.Confirmation",
+                    "purchase_request_id": "d432de19be8347d09f656d9fe966e2f9",
+                    "purchase_token": "d432de19be8347d09f656d9fe966e2f9",
+                    "order_id": "eeb59d64-9e6a-11ea-bb37-0242ac130002",
+                    "purchase_timestamp": 1590399311,
+                    "purchase_payload": {
+                        "value": "payload"
+                    },
+                    "signed_data": "purchase_request_id=id_value&purchase_token=token_value&order_id=id_value&...",
+                    "signature": "Pi6JNCFeeleRa...",
+                })
+            ),
+            "expected": ref("REQUEST_PURCHASE:NOT_EMPTY-1").string,
+            "raise_handler": does_not_raise()
+        },
+    ],
+    "CUSTOM": [
+        {
+            "value": ref(
+                key="REQUEST_PURCHASE:CUSTOM-1",
+                obj=ValueField({
+                    "type": "Purchase.Confirmation",
+                    "purchase_request_id": "d432de19be8347d09f656d9fe966e2f9",
+                    "purchase_token": "d432de19be8347d09f656d9fe966e2f9",
+                    "order_id": "eeb59d64-9e6a-11ea-bb37-0242ac130002",
+                    "purchase_timestamp": 1590399311,
+                    "purchase_payload": {
+                        "id": "22c5d173-000f-5000-9000-1bdf241d4651",
+                        "status": "wait",
+                        "paid": False,
+                        "amount": "5",
+                        "currency": "USD",
+                    },
+                    "signed_data": "purchase_request_id=id_value&purchase_token=token_value&order_id=id_value&...",
+                    "signature": "Pi6JNCFeeleRa...",
+                })
+            ),
+            "expected": ref("REQUEST_PURCHASE:CUSTOM-1").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="REQUEST_PURCHASE:CUSTOM-2",
+                obj=ValueField(
+                    obj={
+                    "type": "Purchase.Confirmation",
+                    "purchase_request_id": "d432de19be8347d09f656d9fe966e2f9",
+                    "purchase_token": "d432de19be8347d09f656d9fe966e2f9",
+                    "order_id": "eeb59d64-9e6a-11ea-bb37-0242ac130002",
+                    "purchase_timestamp": 1590399311,
+                    "purchase_payload": {
+                        "id": "22c5d173-000f-5000-9000-1bdf241d4651",
+                        "status": "wait",
+                        "paid": True,
+                        "amount": "300",
+                    },
+                    "signed_data": "purchase_request_id=id_value&purchase_token=token_value&order_id=id_value&...",
+                    "signature": "Pi6JNCFeeleRa...",
+                })
+            ),
+            "expected": orjson.dumps(
+                {
+                    "type": "Purchase.Confirmation",
+                    "purchase_request_id": "d432de19be8347d09f656d9fe966e2f9",
+                    "purchase_token": "d432de19be8347d09f656d9fe966e2f9",
+                    "order_id": "eeb59d64-9e6a-11ea-bb37-0242ac130002",
+                    "purchase_timestamp": 1590399311,
+                    "purchase_payload": {
+                        "id": "22c5d173-000f-5000-9000-1bdf241d4651",
+                        "status": "wait",
+                        "paid": True,
+                        "amount": "300",
+                        "currency": "RUB",
+                    },
+                    "signed_data": "purchase_request_id=id_value&purchase_token=token_value&order_id=id_value&...",
+                    "signature": "Pi6JNCFeeleRa...",
+                }
+            ),
+            "raise_handler": does_not_raise()
+        },
+    ],
+}
+
+REQUEST_AUDIO = {
+    "ERROR": [
+        {
+            "value": ""
+        },
+        {
+            "value": ""
+        }
+    ],
+    "NOT_EMPTY": [
+        *[
+            {
+                "value": ref(
+                    key=f"REQUEST_AUDIO:NOT_EMPTY-{index}",
+                    obj=ValueField({
+                        "type": request_type
+                    })
+                ),
+                "expected": ref(f"REQUEST_AUDIO:NOT_EMPTY-{index}").string,
+                "has_error": False,
+                "raise_handler": does_not_raise()
+            } for index, request_type in enumerate(
+                request.audio.RequestAudioType._value2member_map_.keys(), 
+                start=1
+            )
+        ],
+        #TODO: Request with error
+    ],
 }

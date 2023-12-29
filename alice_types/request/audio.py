@@ -10,7 +10,7 @@ class RequestAudioType(str, Enum):
     AUDIO_PLAYER_PLAYBACK_FINISHED = "AudioPlayer.PlaybackFinished"
     AUDIO_PLAYER_PLAYBACK_NEARLY_FINISHED =  "AudioPlayer.PlaybackNearlyFinished"
     AUDIO_PLAYER_PLAYBACK_STOPPED = "AudioPlayer.PlaybackStopped"
-    AUDIO_PLAYER_PLAYBACK_FAILED = "AudioPlayer.PlaybackStopped"
+    AUDIO_PLAYER_PLAYBACK_FAILED = "AudioPlayer.PlaybackFailed"
 
 
 class RequestAudioErrorType(str, Enum):
@@ -24,7 +24,7 @@ class RequestAudioError(BaseModel):
 
 
 class RequestAudio(BaseModel):
-    type: RequestAudioType
+    type: RequestAudioType = Field(...)
     error: Optional[RequestAudioError] = Field(default=None)
 
     def has_error(self) -> bool:

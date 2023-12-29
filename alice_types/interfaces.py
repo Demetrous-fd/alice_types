@@ -3,7 +3,7 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
-from alice_types.common import AvailableMixin
+from alice_types.mixin import AvailableMixin
 
 INTERFACE_NAME = Literal["screen", "account_linking", "audio_player", "payments"]
 

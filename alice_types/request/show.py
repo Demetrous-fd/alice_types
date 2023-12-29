@@ -1,6 +1,6 @@
 from enum import Enum
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class RequestShowType(str, Enum):
@@ -13,5 +13,5 @@ class ShowType(str, Enum):
 
 
 class RequestShow(BaseModel):
-    type: RequestShowType
-    show_type: RequestShowType
+    type: RequestShowType = Field(...)
+    show_type: ShowType = Field(...)

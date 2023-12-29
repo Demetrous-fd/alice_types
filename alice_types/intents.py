@@ -1,4 +1,4 @@
-from typing import Any, Optional, Union
+from typing import Any, Optional
 from enum import Enum
 
 from pydantic import BaseModel, Field

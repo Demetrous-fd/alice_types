@@ -1,3 +1,4 @@
+from copy import deepcopy
 from typing import Optional
 from enum import Enum
 
@@ -5,7 +6,7 @@ from pydantic import BaseModel, Field
 import pytest
 import orjson
 
-from alice_types import State
+import alice_types
 import dataset
 
 
@@ -19,24 +20,37 @@ import dataset
 )
 def test_state(value, expected, raise_handler):
     with raise_handler:
-        state = State.model_validate_json(value.string)
+        state = alice_types.State.model_validate_json(value.string)
         assert state.model_dump_json(exclude_none=True).encode() == expected
         
+
+class GameState(str, Enum):
+    START = "START"
+    ANY = "*"
+
+
+class SessionState(BaseModel):
+    current_state: GameState = Field(default=GameState.ANY)
+    previous_state: GameState = Field(default=GameState.ANY)
+    
+    
+class UserState(BaseModel):
+    username: Optional[str] = Field(default=None)
+
+
+@pytest.fixture()
+def override_state_field():    
+    old_model = deepcopy(alice_types.State)
         
-def test_state_with_custom_fields_type():
-    class GameState(str, Enum):
-        START = "START"
-        ANY = "*"
-        
-    class SessionState(BaseModel):
-        current_state: GameState = Field(default=GameState.ANY)
-        previous_state: GameState = Field(default=GameState.ANY)
-        
-    class UserState(BaseModel):
-        username: Optional[str] = Field(default=None)
-        
-    State.set_session_model(SessionState)
-    State.set_user_model(UserState)
+    alice_types.State.set_session_model(SessionState)
+    alice_types.State.set_user_model(UserState)
+    
+    yield
+    
+    alice_types.State = old_model
+
+
+def test_state_with_custom_fields_type(override_state_field):
     
     data = orjson.dumps({
         "session": {"current_state": "START"},
@@ -44,7 +58,7 @@ def test_state_with_custom_fields_type():
         "application": {"storage": {"last_login": "01.01.1900"}}
     })
     
-    state = State.model_validate_json(data)
+    state = alice_types.State.model_validate_json(data)
     assert isinstance(state.session, SessionState)
     assert isinstance(state.user, UserState)
     assert isinstance(state.application, dict)

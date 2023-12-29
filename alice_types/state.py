@@ -2,10 +2,10 @@ from typing import Type, Union
 
 from pydantic import BaseModel, Field, ConfigDict, SerializeAsAny
 
-from alice_types.common import DynamicFieldsType
+from alice_types.mixin import DynamicFieldsTypeMixin
 
 
-class State(DynamicFieldsType):
+class State(BaseModel, DynamicFieldsTypeMixin):
     model_config = ConfigDict(extra="allow")
     session: SerializeAsAny[Union[dict, BaseModel]] = Field(default_factory=dict)
     user: SerializeAsAny[Union[dict, BaseModel]] = Field(default_factory=dict)
