@@ -24,7 +24,7 @@ class RequestPurchase(BaseModel, DynamicFieldsTypeMixin):
     signature: str = Field(...)
 
     @classmethod
-    def set_payload_model(cls, model: Type[BaseModel]):
+    def extend_payload_model(cls, model: Type[BaseModel]):
         cls.extend_field_type("payload", model)
 
     @field_serializer("timestamp")
