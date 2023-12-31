@@ -1,20 +1,8 @@
-from decimal import Decimal
-from typing import Optional
-from copy import deepcopy
-
-from pydantic import BaseModel, Field
 import pytest
 
 from alice_types import request
 import dataset
-
-
-class PurchasePayload(BaseModel):
-        id: str = Field(...)
-        status: str =  Field(...)
-        paid: bool = Field(...)
-        amount: Decimal = Field(...)
-        currency: Optional[str] = Field(default="RUB")
+import schemes
 
 
 @pytest.mark.parametrize(
@@ -69,16 +57,6 @@ def test_purchase_request(value, expected, raise_handler):
         assert purchase_request.model_dump_json(exclude_none=True, by_alias=True).encode() == expected
 
 
-@pytest.fixture()
-def override_purchase_payload_request_field():    
-    old_model = deepcopy(request.RequestPurchase)
-    request.RequestPurchase.set_payload_model(PurchasePayload)
-    
-    yield
-    
-    request.RequestPurchase = old_model
-
-
 @pytest.mark.parametrize(
     ["value", "expected", "raise_handler"],
     [
@@ -88,5 +66,6 @@ def override_purchase_payload_request_field():
 def test_purchase_request_with_custom_field(value, expected, raise_handler, override_purchase_payload_request_field):    
     with raise_handler:
         purchase_request = request.RequestPurchase.model_validate_json(value.string)
-        assert isinstance(purchase_request.payload, PurchasePayload), f"{purchase_request.payload=}; {isinstance(purchase_request.payload, PurchasePayload)}"
+        assert isinstance(purchase_request.payload, schemes.PurchasePayload), \
+            f"{purchase_request.payload=}; {isinstance(purchase_request.payload, schemes.PurchasePayload)}"
         assert purchase_request.model_dump_json(exclude_none=True, by_alias=True).encode() == expected

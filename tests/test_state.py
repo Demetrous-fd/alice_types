@@ -1,13 +1,9 @@
-from copy import deepcopy
-from typing import Optional
-from enum import Enum
-
-from pydantic import BaseModel, Field
 import pytest
 import orjson
 
 import alice_types
 import dataset
+import schemes
 
 
 @pytest.mark.parametrize(
@@ -22,32 +18,6 @@ def test_state(value, expected, raise_handler):
     with raise_handler:
         state = alice_types.State.model_validate_json(value.string)
         assert state.model_dump_json(exclude_none=True).encode() == expected
-        
-
-class GameState(str, Enum):
-    START = "START"
-    ANY = "*"
-
-
-class SessionState(BaseModel):
-    current_state: GameState = Field(default=GameState.ANY)
-    previous_state: GameState = Field(default=GameState.ANY)
-    
-    
-class UserState(BaseModel):
-    username: Optional[str] = Field(default=None)
-
-
-@pytest.fixture()
-def override_state_field():    
-    old_model = deepcopy(alice_types.State)
-        
-    alice_types.State.set_session_model(SessionState)
-    alice_types.State.set_user_model(UserState)
-    
-    yield
-    
-    alice_types.State = old_model
 
 
 def test_state_with_custom_fields_type(override_state_field):
@@ -59,13 +29,13 @@ def test_state_with_custom_fields_type(override_state_field):
     })
     
     state = alice_types.State.model_validate_json(data)
-    assert isinstance(state.session, SessionState)
-    assert isinstance(state.user, UserState)
+    assert isinstance(state.session, schemes.SessionState)
+    assert isinstance(state.user, schemes.UserState)
     assert isinstance(state.application, dict)
     
     
     assert all([
-        state.session.current_state == GameState.START,
+        state.session.current_state == schemes.GameState.START,
         state.session.previous_state == "*",
         state.user.username == None,
         state.application["storage"]["last_login"] == "01.01.1900"
