@@ -21,7 +21,6 @@ def test_state(value, expected, raise_handler):
 
 
 def test_state_with_custom_fields_type(override_state_field):
-    
     data = orjson.dumps({
         "session": {"current_state": "START"},
         "user": {},
@@ -32,8 +31,7 @@ def test_state_with_custom_fields_type(override_state_field):
     assert isinstance(state.session, schemes.SessionState)
     assert isinstance(state.user, schemes.UserState)
     assert isinstance(state.application, dict)
-    
-    
+
     assert all([
         state.session.current_state == schemes.GameState.START,
         state.session.previous_state == "*",

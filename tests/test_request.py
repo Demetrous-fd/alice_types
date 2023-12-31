@@ -21,6 +21,7 @@ def test_show_request(value, expected, raise_handler):
 @pytest.mark.parametrize(
     ["value", "expected", "has_error", "raise_handler"],
     [
+        *[data.values() for data in dataset.REQUEST_AUDIO["ERROR"]],
         *[data.values() for data in dataset.REQUEST_AUDIO["NOT_EMPTY"]]
     ]
 )
@@ -29,9 +30,9 @@ def test_audio_request(value, expected, has_error, raise_handler):
         audio_request = request.RequestAudio.model_validate_json(value.string)
         
         if has_error:
-            assert isinstance(audio_request.error, list) and audio_request.error
+            assert isinstance(audio_request.error, request.audio.RequestAudioError) and audio_request.is_error()
         else:
-            assert audio_request.error is None
+            assert audio_request.error is None and audio_request.is_error() is False
             
         assert audio_request.model_dump_json(exclude_none=True, by_alias=True).encode() == expected
 
@@ -69,3 +70,4 @@ def test_purchase_request_with_custom_field(value, expected, raise_handler, over
         assert isinstance(purchase_request.payload, schemes.PurchasePayload), \
             f"{purchase_request.payload=}; {isinstance(purchase_request.payload, schemes.PurchasePayload)}"
         assert purchase_request.model_dump_json(exclude_none=True, by_alias=True).encode() == expected
+

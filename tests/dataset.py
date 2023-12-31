@@ -1298,7 +1298,6 @@ REQUEST_SHOW = {
     ],
 }
 
-
 REQUEST_PURCHASE = {
     "ERROR": [
         {
@@ -1375,20 +1374,20 @@ REQUEST_PURCHASE = {
                 key="REQUEST_PURCHASE:CUSTOM-2",
                 obj=ValueField(
                     obj={
-                    "type": "Purchase.Confirmation",
-                    "purchase_request_id": "d432de19be8347d09f656d9fe966e2f9",
-                    "purchase_token": "d432de19be8347d09f656d9fe966e2f9",
-                    "order_id": "eeb59d64-9e6a-11ea-bb37-0242ac130002",
-                    "purchase_timestamp": 1590399311,
-                    "purchase_payload": {
-                        "id": "22c5d173-000f-5000-9000-1bdf241d4651",
-                        "status": "wait",
-                        "paid": True,
-                        "amount": "300",
-                    },
-                    "signed_data": "purchase_request_id=id_value&purchase_token=token_value&order_id=id_value&...",
-                    "signature": "Pi6JNCFeeleRa...",
-                })
+                        "type": "Purchase.Confirmation",
+                        "purchase_request_id": "d432de19be8347d09f656d9fe966e2f9",
+                        "purchase_token": "d432de19be8347d09f656d9fe966e2f9",
+                        "order_id": "eeb59d64-9e6a-11ea-bb37-0242ac130002",
+                        "purchase_timestamp": 1590399311,
+                        "purchase_payload": {
+                            "id": "22c5d173-000f-5000-9000-1bdf241d4651",
+                            "status": "wait",
+                            "paid": True,
+                            "amount": "300",
+                        },
+                        "signed_data": "purchase_request_id=id_value&purchase_token=token_value&order_id=id_value&...",
+                        "signature": "Pi6JNCFeeleRa...",
+                    })
             ),
             "expected": orjson.dumps(
                 {
@@ -1413,13 +1412,44 @@ REQUEST_PURCHASE = {
     ],
 }
 
+REQUEST_AUDIO_ERROR = [
+    ref(
+        key="REQUEST_AUDIO_ERROR-1",
+        obj=ValueField({
+            "type": request.audio.RequestAudioErrorType.MEDIA_ERROR_UNKNOWN,
+            "message": "Что-то пошло не так 🙃"
+        })
+    ),
+    ref(
+        key="REQUEST_AUDIO_ERROR-2",
+        obj=ValueField({
+            "type": request.audio.RequestAudioErrorType.MEDIA_ERROR_SERVICE_UNAVAILABLE,
+            "message": "указанный URL трека недоступен или некорректен."
+        })
+    ),
+]
+
 REQUEST_AUDIO = {
     "ERROR": [
         {
-            "value": ""
+            "value": ref(
+                key="REQUEST_AUDIO:ERROR-1",
+                obj=ref("EMPTY")
+            ),
+            "expected": None,
+            "has_error": None,
+            "raise_handler": pytest.raises((ValueError, KeyError))
         },
         {
-            "value": ""
+            "value": ref(
+                key=f"REQUEST_AUDIO:ERROR-2",
+                obj=ValueField({
+                    "type": request.audio.RequestAudioType.AUDIO_PLAYER_PLAYBACK_FAILED
+                })
+            ),
+            "expected": None,
+            "has_error": None,
+            "raise_handler": pytest.raises(ValueError)
         }
     ],
     "NOT_EMPTY": [
@@ -1435,10 +1465,33 @@ REQUEST_AUDIO = {
                 "has_error": False,
                 "raise_handler": does_not_raise()
             } for index, request_type in enumerate(
-                request.audio.RequestAudioType._value2member_map_.keys(), 
+                list(request.audio.RequestAudioType._value2member_map_.keys())[0: 4],
                 start=1
             )
         ],
-        #TODO: Request with error
+        {
+            "value": ref(
+                key="REQUEST_AUDIO:NOT_EMPTY-5",
+                obj=ValueField({
+                    "type": request.audio.RequestAudioType.AUDIO_PLAYER_PLAYBACK_FAILED,
+                    "error": ref(key="REQUEST_AUDIO_ERROR-1").obj
+                })
+            ),
+            "expected": ref("REQUEST_AUDIO:NOT_EMPTY-5").string,
+            "has_error": True,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="REQUEST_AUDIO:NOT_EMPTY-6",
+                obj=ValueField({
+                    "type": request.audio.RequestAudioType.AUDIO_PLAYER_PLAYBACK_FAILED,
+                    "error": ref(key="REQUEST_AUDIO_ERROR-2").obj
+                })
+            ),
+            "expected": ref("REQUEST_AUDIO:NOT_EMPTY-6").string,
+            "has_error": True,
+            "raise_handler": does_not_raise()
+        }
     ],
 }
