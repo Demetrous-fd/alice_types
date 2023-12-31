@@ -12,10 +12,6 @@ class EntityValueFio(BaseModel, AvailableMixin):
     last_name: Optional[str] = Field(default=None)
 
 
-class EntityValueNumber(BaseModel, AvailableMixin):
-    value: Optional[Union[int, float]] = Field(default=None)
-
-
 class EntityValueGeo(BaseModel, AvailableMixin):
     country: Optional[str] = Field(default=None)
     city: Optional[str] = Field(default=None)
@@ -55,7 +51,7 @@ class EntityBase(BaseModel):
 
 class EntityNumber(EntityBase):
     type: Literal[SlotsType.YANDEX_NUMBER] = Field(...)
-    value: EntityValueNumber = Field(...)
+    value: Union[int, float] = Field(...)
 
 
 class EntityGeo(EntityBase):

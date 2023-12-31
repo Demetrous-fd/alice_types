@@ -6,6 +6,24 @@ import schemes
 
 
 @pytest.mark.parametrize(
+    ["value", "expected", "is_ping", "raise_handler"],
+    [
+        *[data.values() for data in dataset.REQUEST_SIMPLE_UTTERANCE["NOT_EMPTY"]],
+        *[data.values() for data in dataset.REQUEST_SIMPLE_UTTERANCE["ERROR"]],
+    ]
+)
+def test_simple_utterance_request(value, expected, is_ping, raise_handler):
+    with raise_handler:
+        simple_request = request.RequestSimpleUtterance.model_validate_json(value.string)
+        assert simple_request.is_ping() == is_ping
+        assert simple_request.model_dump_json(exclude_none=True).encode() == expected
+
+
+def test_button_pressed_request():
+    pass
+
+
+@pytest.mark.parametrize(
     ["value", "expected", "raise_handler"],
     [
         *[data.values() for data in dataset.REQUEST_SHOW["NOT_EMPTY"]],
@@ -35,14 +53,6 @@ def test_audio_request(value, expected, has_error, raise_handler):
             assert audio_request.error is None and audio_request.is_error() is False
             
         assert audio_request.model_dump_json(exclude_none=True, by_alias=True).encode() == expected
-
-
-def test_simple_utterance_request():
-    pass
-
-
-def test_button_pressed_request():
-    pass
 
 
 @pytest.mark.parametrize(

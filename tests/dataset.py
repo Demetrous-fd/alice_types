@@ -295,7 +295,7 @@ MARKUP = {
         {
             "value": ref(
                 key="MARKUP:NOT_EMPTY-1",
-                obj=ValueField({"dangerous_context": None})
+                obj=ValueField({"dangerous_context": True})
             ),
             "expected": ref("MARKUP:NOT_EMPTY-1").string,
             "raise_handler": does_not_raise()
@@ -513,34 +513,6 @@ ENTITY_VALUE = {
         },
         {
             "value": ref(
-                key="ENTITY_VALUE:NOT_EMPTY:NUMBER-1",
-                obj=ValueField({
-                    "value": 16
-                })
-            ),
-            "expected": ref("ENTITY_VALUE:NOT_EMPTY:NUMBER-1").string,
-            "expected_fields": [
-                "value"
-            ],
-            "type": entity.EntityValueNumber,
-            "raise_handler": does_not_raise()
-        },
-        {
-            "value": ref(
-                key="ENTITY_VALUE:NOT_EMPTY:NUMBER-2",
-                obj=ValueField({
-                    "value": 3.25
-                })
-            ),
-            "expected": ref("ENTITY_VALUE:NOT_EMPTY:NUMBER-2").string,
-            "expected_fields": [
-                "value"
-            ],
-            "type": entity.EntityValueNumber,
-            "raise_handler": does_not_raise()
-        },
-        {
-            "value": ref(
                 key="ENTITY_VALUE:NOT_EMPTY:DICT",
                 obj=ValueField({
                     "text": "Some text 1",
@@ -603,7 +575,7 @@ ENTITY = {
                         "start": 5,
                         "end": 6
                     },
-                    "value": ref("ENTITY_VALUE:NOT_EMPTY:NUMBER-1").obj,
+                    "value": 16,
                 })
             ),
             "expected": ref("ENTITY:NOT_EMPTY:NUMBER-1").string,
@@ -619,7 +591,7 @@ ENTITY = {
                         "start": 5,
                         "end": 6
                     },
-                    "value": ref("ENTITY_VALUE:NOT_EMPTY:NUMBER-2").obj,
+                    "value": 3.25,
                 })
             ),
             "expected": ref("ENTITY:NOT_EMPTY:NUMBER-2").string,
@@ -1494,4 +1466,65 @@ REQUEST_AUDIO = {
             "raise_handler": does_not_raise()
         }
     ],
+}
+
+REQUEST_SIMPLE_UTTERANCE = {
+    "ERROR": [
+        {
+            "value": ref(
+                key="REQUEST_SIMPLE_UTTERANCE:ERROR-1",
+                obj=ref("EMPTY")
+            ),
+            "expected": None,
+            "is_ping": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="REQUEST_SIMPLE_UTTERANCE:ERROR-2",
+                obj=ValueField({
+                    "command": "закажи пиццу на улицу льва толстого 16 на завтра",
+                    "original_utterance": "закажи пиццу на улицу льва толстого, 16 на завтра",
+                    "markup": ref(key="MARKUP:NOT_EMPTY-1").obj,
+                    "payload": {"data": "1" * 4096},
+                    "nlu": ref(key="NLU:NOT_EMPTY-1").obj,
+                    "type": "SimpleUtterance",
+                })
+            ),
+            "expected": None,
+            "is_ping": None,
+            "raise_handler": pytest.raises(ValueError)
+        }
+    ],
+    "NOT_EMPTY": [
+        {
+            "value": ref(
+                key="REQUEST_SIMPLE_UTTERANCE:NOT_EMPTY-1",
+                obj=ValueField({
+                    "command": "закажи пиццу на улицу льва толстого 16 на завтра",
+                    "original_utterance": "закажи пиццу на улицу льва толстого, 16 на завтра",
+                    "markup": ref(key="MARKUP:NOT_EMPTY-1").obj,
+                    "payload": {},
+                    "nlu": ref(key="NLU:NOT_EMPTY-1").obj,
+                    "type": "SimpleUtterance",
+                })
+            ),
+            "expected": ref("REQUEST_SIMPLE_UTTERANCE:NOT_EMPTY-1").string,
+            "is_ping": False,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="REQUEST_SIMPLE_UTTERANCE:NOT_EMPTY-2",
+                obj=ValueField({
+                    "command": "",
+                    "original_utterance": "ping",
+                    "type": "SimpleUtterance",
+                })
+            ),
+            "expected": ref("REQUEST_SIMPLE_UTTERANCE:NOT_EMPTY-2").string,
+            "is_ping": True,
+            "raise_handler": does_not_raise()
+        }
+    ]
 }

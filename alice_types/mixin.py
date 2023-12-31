@@ -1,7 +1,8 @@
 from typing import Type, ClassVar, List, Any, Union
 from collections import defaultdict
 
-from pydantic import BaseModel, model_validator, ValidationError
+from pydantic import BaseModel, model_validator, ValidationError, field_validator
+from orjson import orjson
 
 
 class AvailableMixin:
@@ -12,7 +13,18 @@ class AvailableMixin:
                 available.append(name)
         
         return available
-    
+
+
+class CheckPayloadMixin:
+    @field_validator("payload", mode="before")
+    @classmethod
+    def validate_payload(cls, value):
+        if isinstance(value, dict):
+            data = orjson.dumps(value)
+            if len(data) > 4096:
+                raise ValueError(f"Payload is big; Max bytes size: 4096; Current size: {len(data)}")
+        return value
+
 
 class DynamicFieldsTypeMixin:
     """

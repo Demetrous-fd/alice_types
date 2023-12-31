@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 
 from alice_types import State, Markup, Meta, Session, NaturalLanguageUnderstanding
 from alice_types.request import RequestAudio, RequestPurchase, RequestShow
+from alice_types.mixin import CheckPayloadMixin
 
 
 class RequestType(str, Enum):
@@ -13,19 +14,19 @@ class RequestType(str, Enum):
 
 
 # TODO: Посмотреть ответы от Алисы
-class RequestButtonPressed(BaseModel):
+class RequestButtonPressed(BaseModel, CheckPayloadMixin):
     type: Literal[RequestType.BUTTON_PRESSED] = Field(...)
     nlu: Optional[NaturalLanguageUnderstanding] = Field(default=None)
     payload: Optional[dict] = Field(default=None)
 
 
-class RequestSimpleUtterance(BaseModel):
-    type: Literal[RequestType.SIMPLE_UTTERANCE] = Field(...)
-    nlu: Optional[NaturalLanguageUnderstanding] = Field(default=None)
-    payload: Optional[dict] = Field(default=None)
+class RequestSimpleUtterance(BaseModel, CheckPayloadMixin):
     command: Optional[str] = Field(default=None)  # Can be none if payload passed
     original_utterance: Optional[str] = Field(default=None, max_length=1024)  # Can be none if payload passed
     markup: Optional[Markup] = Field(default=None)
+    payload: Optional[dict] = Field(default=None)
+    nlu: Optional[NaturalLanguageUnderstanding] = Field(default=None)
+    type: Literal[RequestType.SIMPLE_UTTERANCE] = Field(...)
 
     def is_ping(self) -> bool:
         return self.original_utterance == "ping"

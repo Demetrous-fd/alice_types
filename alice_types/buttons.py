@@ -1,10 +1,12 @@
 from typing import Optional
 
-from pydantic import BaseModel, Field, AnyHttpUrl, field_validator
+from pydantic import BaseModel, Field, AnyHttpUrl
 import orjson
 
+from alice_types.mixin import CheckPayloadMixin
 
-class BaseButton(BaseModel):
+
+class BaseButton(BaseModel, CheckPayloadMixin):
     title: str = Field(
         ..., 
         max_length=64, 
@@ -12,17 +14,7 @@ class BaseButton(BaseModel):
     )
     url: Optional[AnyHttpUrl] = Field(default=None, max_length=1024)
     payload: dict = Field(default_factory=dict)
-    
-    @field_validator("payload", mode="before")
-    @classmethod
-    def validate_payload(cls, value):
-        if isinstance(value, dict):
-            data = orjson.dumps(value)
-            if len(data) > 4096:
-                raise ValueError(f"Payload is big; Max bytes size: 4096; Current size: {len(data)}")
-        return value
 
 
 class Button(BaseButton):
     hide: bool = Field(default=False)
-
