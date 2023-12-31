@@ -913,6 +913,22 @@ NLU = {
             ),
             "expected": ref("NLU:NOT_EMPTY-4").string,
             "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="NLU:NOT_EMPTY-5",
+                obj=ValueField({
+                    "tokens": [
+                        "надпись",
+                        "на",
+                        "кнопке"
+                    ],
+                    "entities": [],
+                    "intents": {},
+                })
+            ),
+            "expected": ref("NLU:NOT_EMPTY-5").string,
+            "raise_handler": does_not_raise()
         }
     ],
     "ERROR": [
@@ -1526,5 +1542,58 @@ REQUEST_SIMPLE_UTTERANCE = {
             "is_ping": True,
             "raise_handler": does_not_raise()
         }
+    ]
+}
+
+REQUEST_BUTTON_PRESSED = {
+    "ERROR": [
+        {
+            "value": ref(
+                key="REQUEST_BUTTON_PRESSED:ERROR-1",
+                obj=ref("EMPTY")
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="REQUEST_BUTTON_PRESSED:ERROR-2",
+                obj=ValueField({
+                    "markup": ref(key="MARKUP:NOT_EMPTY-1").obj,
+                    "nlu": ref(key="NLU:NOT_EMPTY-5").obj,
+                    "payload": {"data": "1" * 4096},
+                    "type": "ButtonPressed",
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        }
+    ],
+    "NOT_EMPTY": [
+        {
+            "value": ref(
+                key="REQUEST_BUTTON_PRESSED:NOT_EMPTY-1",
+                obj=ValueField({
+                    "nlu": ref(key="NLU:NOT_EMPTY-5").obj,
+                    "payload": {},
+                    "type": "ButtonPressed",
+                })
+            ),
+            "expected": ref("REQUEST_BUTTON_PRESSED:NOT_EMPTY-1").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="REQUEST_BUTTON_PRESSED:NOT_EMPTY-2",
+                obj=ValueField({
+                    "markup": ref(key="MARKUP:NOT_EMPTY-1").obj,
+                    "nlu": ref(key="NLU:NOT_EMPTY-5").obj,
+                    "payload": {},
+                    "type": "ButtonPressed",
+                })
+            ),
+            "expected": ref("REQUEST_BUTTON_PRESSED:NOT_EMPTY-2").string,
+            "raise_handler": does_not_raise()
+        },
     ]
 }

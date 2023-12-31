@@ -15,9 +15,10 @@ class RequestType(str, Enum):
 
 # TODO: Посмотреть ответы от Алисы
 class RequestButtonPressed(BaseModel, CheckPayloadMixin):
-    type: Literal[RequestType.BUTTON_PRESSED] = Field(...)
+    markup: Optional[Markup] = Field(default=None)
     nlu: Optional[NaturalLanguageUnderstanding] = Field(default=None)
     payload: Optional[dict] = Field(default=None)
+    type: Literal[RequestType.BUTTON_PRESSED] = Field(...)
 
 
 class RequestSimpleUtterance(BaseModel, CheckPayloadMixin):

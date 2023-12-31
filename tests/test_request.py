@@ -19,8 +19,17 @@ def test_simple_utterance_request(value, expected, is_ping, raise_handler):
         assert simple_request.model_dump_json(exclude_none=True).encode() == expected
 
 
-def test_button_pressed_request():
-    pass
+@pytest.mark.parametrize(
+    ["value", "expected", "raise_handler"],
+    [
+        *[data.values() for data in dataset.REQUEST_BUTTON_PRESSED["NOT_EMPTY"]],
+        *[data.values() for data in dataset.REQUEST_BUTTON_PRESSED["ERROR"]],
+    ]
+)
+def test_button_pressed_request(value, expected, raise_handler):
+    with raise_handler:
+        button_request = request.RequestButtonPressed.model_validate_json(value.string)
+        assert button_request.model_dump_json(exclude_none=True).encode() == expected
 
 
 @pytest.mark.parametrize(
