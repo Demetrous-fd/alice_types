@@ -17,6 +17,5 @@ from .purchase import (
 from .base import (
     RequestSimpleUtterance,
     RequestButtonPressed,
-    RequestType,
     AliceRequest
 )

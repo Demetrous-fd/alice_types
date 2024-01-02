@@ -8,7 +8,7 @@
 - [x] Meta
 - [x] Session
 - [x] NLU
-- [ ] RequestType
+- [x] +- RequestType
 - [ ] Cards
 - [ ] Directives
 - [ ] AliceRequest
