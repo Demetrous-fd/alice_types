@@ -1444,40 +1444,37 @@ REQUEST_AUDIO = {
         *[
             {
                 "value": ref(
-                    key=f"REQUEST_AUDIO:NOT_EMPTY-{index}",
+                    key=f"REQUEST_AUDIO:{request_type}:NOT_EMPTY",
                     obj=ValueField({
                         "type": request_type
                     })
                 ),
-                "expected": ref(f"REQUEST_AUDIO:NOT_EMPTY-{index}").string,
+                "expected": ref(f"REQUEST_AUDIO:{request_type}:NOT_EMPTY").string,
                 "has_error": False,
                 "raise_handler": does_not_raise()
-            } for index, request_type in enumerate(
-                list(request.audio.RequestAudioType._value2member_map_.keys())[0: 4],
-                start=1
-            )
+            } for request_type in list(request.audio.RequestAudioType._value2member_map_.keys())[0: 4]
         ],
         {
             "value": ref(
-                key="REQUEST_AUDIO:NOT_EMPTY-5",
+                key="REQUEST_AUDIO:AudioPlayer.PlaybackFailed:NOT_EMPTY-1",
                 obj=ValueField({
                     "type": request.audio.RequestAudioType.AUDIO_PLAYER_PLAYBACK_FAILED,
                     "error": ref(key="REQUEST_AUDIO_ERROR-1").obj
                 })
             ),
-            "expected": ref("REQUEST_AUDIO:NOT_EMPTY-5").string,
+            "expected": ref("REQUEST_AUDIO:AudioPlayer.PlaybackFailed:NOT_EMPTY-1").string,
             "has_error": True,
             "raise_handler": does_not_raise()
         },
         {
             "value": ref(
-                key="REQUEST_AUDIO:NOT_EMPTY-6",
+                key="REQUEST_AUDIO:AudioPlayer.PlaybackFailed:NOT_EMPTY-2",
                 obj=ValueField({
                     "type": request.audio.RequestAudioType.AUDIO_PLAYER_PLAYBACK_FAILED,
                     "error": ref(key="REQUEST_AUDIO_ERROR-2").obj
                 })
             ),
-            "expected": ref("REQUEST_AUDIO:NOT_EMPTY-6").string,
+            "expected": ref("REQUEST_AUDIO:AudioPlayer.PlaybackFailed:NOT_EMPTY-2").string,
             "has_error": True,
             "raise_handler": does_not_raise()
         }
@@ -1594,6 +1591,299 @@ REQUEST_BUTTON_PRESSED = {
             ),
             "expected": ref("REQUEST_BUTTON_PRESSED:NOT_EMPTY-2").string,
             "raise_handler": does_not_raise()
+        },
+    ]
+}
+
+ALICE_REQUEST = {
+    "NOT_EMPTY": [
+        {
+            "value": ref(
+                key="ALICE_REQUEST:REQUEST_SIMPLE_UTTERANCE:NOT_EMPTY-1",
+                obj=ValueField({
+                    "meta": ref(key="META:NOT_EMPTY-1").obj,
+                    "request": ref(key="REQUEST_SIMPLE_UTTERANCE:NOT_EMPTY-1").obj,
+                    "session": ref(key="SESSION:NOT_EMPTY-1").obj,
+                    "state": ref(key="STATE:NOT_EMPTY-1").obj,
+                    "version": "1.0",
+                })
+            ),
+            "expected": ref("ALICE_REQUEST:REQUEST_SIMPLE_UTTERANCE:NOT_EMPTY-1").string,
+            "check_type": {
+                "request": request.RequestSimpleUtterance
+            },
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ALICE_REQUEST:REQUEST_SIMPLE_UTTERANCE:NOT_EMPTY-2",
+                obj=ValueField({
+                    "meta": ref(key="META:NOT_EMPTY-1").obj,
+                    "request": ref(key="REQUEST_SIMPLE_UTTERANCE:NOT_EMPTY-2").obj,
+                    "session": ref(key="SESSION:NOT_EMPTY-1").obj,
+                    "state": ref(key="STATE:NOT_EMPTY-1").obj,
+                    "version": "1.0",
+                })
+            ),
+            "expected": ref("ALICE_REQUEST:REQUEST_SIMPLE_UTTERANCE:NOT_EMPTY-2").string,
+            "check_type": {
+                "request": request.RequestSimpleUtterance
+            },
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ALICE_REQUEST:REQUEST_BUTTON_PRESSED:NOT_EMPTY-1",
+                obj=ValueField({
+                    "meta": ref(key="META:NOT_EMPTY-1").obj,
+                    "request": ref(key="REQUEST_BUTTON_PRESSED:NOT_EMPTY-1").obj,
+                    "session": ref(key="SESSION:NOT_EMPTY-1").obj,
+                    "state": ref(key="STATE:NOT_EMPTY-1").obj,
+                    "version": "1.0",
+                })
+            ),
+            "expected": ref("ALICE_REQUEST:REQUEST_BUTTON_PRESSED:NOT_EMPTY-1").string,
+            "check_type": {
+                "request": request.RequestButtonPressed
+            },
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ALICE_REQUEST:REQUEST_BUTTON_PRESSED:NOT_EMPTY-2",
+                obj=ValueField({
+                    "meta": ref(key="META:NOT_EMPTY-1").obj,
+                    "request": ref(key="REQUEST_BUTTON_PRESSED:NOT_EMPTY-2").obj,
+                    "session": ref(key="SESSION:NOT_EMPTY-1").obj,
+                    "state": ref(key="STATE:NOT_EMPTY-1").obj,
+                    "version": "1.0",
+                })
+            ),
+            "expected": ref("ALICE_REQUEST:REQUEST_BUTTON_PRESSED:NOT_EMPTY-2").string,
+            "check_type": {
+                "request": request.RequestButtonPressed
+            },
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ALICE_REQUEST:REQUEST_PURCHASE:NOT_EMPTY-1",
+                obj=ValueField({
+                    "meta": ref(key="META:NOT_EMPTY-1").obj,
+                    "request": ref(key="REQUEST_PURCHASE:NOT_EMPTY-1").obj,
+                    "session": ref(key="SESSION:NOT_EMPTY-1").obj,
+                    "state": ref(key="STATE:NOT_EMPTY-1").obj,
+                    "version": "1.0",
+                })
+            ),
+            "expected": ref("ALICE_REQUEST:REQUEST_PURCHASE:NOT_EMPTY-1").string,
+            "check_type": {
+                "request": request.RequestPurchase
+            },
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ALICE_REQUEST:REQUEST_SHOW:NOT_EMPTY-1",
+                obj=ValueField({
+                    "meta": ref(key="META:NOT_EMPTY-1").obj,
+                    "request": ref(key="REQUEST_SHOW:NOT_EMPTY-1").obj,
+                    "session": ref(key="SESSION:NOT_EMPTY-1").obj,
+                    "state": ref(key="STATE:NOT_EMPTY-1").obj,
+                    "version": "1.0",
+                })
+            ),
+            "expected": ref("ALICE_REQUEST:REQUEST_SHOW:NOT_EMPTY-1").string,
+            "check_type": {
+                "request": request.RequestShow
+            },
+            "raise_handler": does_not_raise()
+        },
+        *[
+            {
+                "value": ref(
+                    key=f"ALICE_REQUEST:REQUEST_AUDIO:NOT_EMPTY-{index}",
+                    obj=ValueField({
+                        "meta": ref(key="META:NOT_EMPTY-1").obj,
+                        "request": request_type["value"].obj,
+                        "session": ref(key="SESSION:NOT_EMPTY-1").obj,
+                        "state": ref(key="STATE:NOT_EMPTY-1").obj,
+                        "version": "1.0",
+                    })
+                ),
+                "expected": ref(f"ALICE_REQUEST:REQUEST_AUDIO:NOT_EMPTY-{index}").string,
+                "check_type": {
+                    "request": request.RequestAudio
+                },
+                "raise_handler": does_not_raise()
+            } for index, request_type in enumerate(REQUEST_AUDIO["NOT_EMPTY"], start=1)
+        ]
+    ],
+    "ERROR": [
+        {
+            "value": ref(
+                key="ALICE_REQUEST:REQUEST_SIMPLE_UTTERANCE:ERROR-1",
+                obj=ValueField({
+                    "meta": ref(key="META:ERROR-1").obj,
+                    "request": ref(key="REQUEST_SIMPLE_UTTERANCE:ERROR-1").obj,
+                    "session": ref(key="SESSION:ERROR-1").obj,
+                    "state": ref(key="STATE:ERROR-1").obj,
+                    "version": "1.0",
+                })
+            ),
+            "expected": None,
+            "check_type": None,
+            "raise_handler": pytest.raises((ValueError, KeyError))
+        },
+        {
+            "value": ref(
+                key="ALICE_REQUEST:REQUEST_SIMPLE_UTTERANCE:ERROR-1",
+                obj=ValueField({
+                    "meta": ref(key="META:ERROR-1").obj,
+                    "request": ref(key="REQUEST_SIMPLE_UTTERANCE:ERROR-2").obj,
+                    "session": ref(key="SESSION:ERROR-1").obj,
+                    "state": ref(key="STATE:ERROR-1").obj,
+                    "version": "1.0",
+                })
+            ),
+            "expected": None,
+            "check_type": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="ALICE_REQUEST:REQUEST_BUTTON_PRESSED:ERROR-1",
+                obj=ValueField({
+                    "meta": ref(key="META:ERROR-1").obj,
+                    "request": ref(key="REQUEST_BUTTON_PRESSED:ERROR-1").obj,
+                    "session": ref(key="SESSION:ERROR-1").obj,
+                    "state": ref(key="STATE:ERROR-1").obj,
+                    "version": "1.0",
+                })
+            ),
+            "expected": None,
+            "check_type": None,
+            "raise_handler": pytest.raises((ValueError, KeyError))
+        },
+        {
+            "value": ref(
+                key="ALICE_REQUEST:REQUEST_BUTTON_PRESSED:ERROR-2",
+                obj=ValueField({
+                    "meta": ref(key="META:ERROR-1").obj,
+                    "request": ref(key="REQUEST_BUTTON_PRESSED:ERROR-2").obj,
+                    "session": ref(key="SESSION:ERROR-1").obj,
+                    "state": ref(key="STATE:ERROR-1").obj,
+                    "version": "1.0",
+                })
+            ),
+            "expected": None,
+            "check_type": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="ALICE_REQUEST:REQUEST_PURCHASE:ERROR-1",
+                obj=ValueField({
+                    "meta": ref(key="META:ERROR-1").obj,
+                    "request": ref(key="REQUEST_PURCHASE:ERROR-1").obj,
+                    "session": ref(key="SESSION:ERROR-1").obj,
+                    "state": ref(key="STATE:ERROR-1").obj,
+                    "version": "1.0",
+                })
+            ),
+            "expected": None,
+            "check_type": None,
+            "raise_handler": pytest.raises((ValueError, KeyError))
+        },
+        {
+            "value": ref(
+                key="ALICE_REQUEST:REQUEST_PURCHASE:ERROR-2",
+                obj=ValueField({
+                    "meta": ref(key="META:ERROR-1").obj,
+                    "request": ref(key="REQUEST_PURCHASE:ERROR-2").obj,
+                    "session": ref(key="SESSION:ERROR-1").obj,
+                    "state": ref(key="STATE:ERROR-1").obj,
+                    "version": "1.0",
+                })
+            ),
+            "expected": None,
+            "check_type": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="ALICE_REQUEST:REQUEST_SHOW:ERROR-1",
+                obj=ValueField({
+                    "meta": ref(key="META:ERROR-1").obj,
+                    "request": ref(key="REQUEST_SHOW:ERROR-1").obj,
+                    "session": ref(key="SESSION:ERROR-1").obj,
+                    "state": ref(key="STATE:ERROR-1").obj,
+                    "version": "1.0",
+                })
+            ),
+            "expected": None,
+            "check_type": None,
+            "raise_handler": pytest.raises((ValueError, KeyError))
+        },
+        {
+            "value": ref(
+                key="ALICE_REQUEST:REQUEST_SHOW:ERROR-2",
+                obj=ValueField({
+                    "meta": ref(key="META:ERROR-1").obj,
+                    "request": ref(key="REQUEST_SHOW:ERROR-2").obj,
+                    "session": ref(key="SESSION:ERROR-1").obj,
+                    "state": ref(key="STATE:ERROR-1").obj,
+                    "version": "1.0",
+                })
+            ),
+            "expected": None,
+            "check_type": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="ALICE_REQUEST:REQUEST_SHOW:ERROR-3",
+                obj=ValueField({
+                    "meta": ref(key="META:ERROR-1").obj,
+                    "request": ref(key="REQUEST_SHOW:ERROR-3").obj,
+                    "session": ref(key="SESSION:ERROR-1").obj,
+                    "state": ref(key="STATE:ERROR-1").obj,
+                    "version": "1.0",
+                })
+            ),
+            "expected": None,
+            "check_type": None,
+            "raise_handler": pytest.raises((ValueError, KeyError))
+        },
+        {
+            "value": ref(
+                key="ALICE_REQUEST:REQUEST_AUDIO:ERROR-1",
+                obj=ValueField({
+                    "meta": ref(key="META:ERROR-1").obj,
+                    "request": ref(key="REQUEST_AUDIO:ERROR-1").obj,
+                    "session": ref(key="SESSION:ERROR-1").obj,
+                    "state": ref(key="STATE:ERROR-1").obj,
+                    "version": "1.0",
+                })
+            ),
+            "expected": None,
+            "check_type": None,
+            "raise_handler": pytest.raises((ValueError, KeyError))
+        },
+        {
+            "value": ref(
+                key="ALICE_REQUEST:REQUEST_AUDIO:ERROR-1",
+                obj=ValueField({
+                    "meta": ref(key="META:ERROR-1").obj,
+                    "request": ref(key="REQUEST_AUDIO:ERROR-1").obj,
+                    "session": ref(key="SESSION:ERROR-1").obj,
+                    "state": ref(key="STATE:ERROR-1").obj,
+                    "version": "1.0",
+                })
+            ),
+            "expected": None,
+            "check_type": None,
+            "raise_handler": pytest.raises((ValueError, KeyError))
         },
     ]
 }

@@ -9,7 +9,7 @@
 - [x] Session
 - [x] NLU
 - [x] +- RequestType
+- [x] AliceRequest
 - [ ] Cards
 - [ ] Directives
-- [ ] AliceRequest
 - [ ] AliceResponse

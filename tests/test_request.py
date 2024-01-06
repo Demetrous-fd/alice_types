@@ -90,3 +90,20 @@ def test_purchase_request_with_custom_field(value, expected, raise_handler, over
             f"{purchase_request.payload=}; {isinstance(purchase_request.payload, schemes.PurchasePayload)}"
         assert purchase_request.model_dump_json(exclude_none=True, by_alias=True).encode() == expected
 
+
+@pytest.mark.parametrize(
+    ["value", "expected", "check_type", "raise_handler"],
+    [
+        *[data.values() for data in dataset.ALICE_REQUEST["NOT_EMPTY"]],
+        *[data.values() for data in dataset.ALICE_REQUEST["ERROR"]],
+    ]
+)
+def test_alice_request(value, expected, check_type, raise_handler):
+    with raise_handler:
+        alice_request = request.AliceRequest.model_validate_json(value.string)
+
+        for field_name, _type_ in check_type.items():
+            field = alice_request.__dict__[field_name]
+            assert isinstance(field, _type_)
+
+        assert alice_request.model_dump_json(exclude_none=True, by_alias=True).encode() == expected

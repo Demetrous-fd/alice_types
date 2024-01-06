@@ -33,8 +33,8 @@ class AliceRequest(BaseModel):
         RequestButtonPressed,
         RequestSimpleUtterance,
         RequestShow,
+        RequestPurchase,
         RequestAudio,
-        RequestPurchase
     ] = Field(...)
     session: Session = Field(...)
     state: State = Field(...)
