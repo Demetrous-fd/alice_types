@@ -16,6 +16,7 @@ from .purchase import (
 
 from .base import (
     RequestSimpleUtterance,
-    RequestButtonPressed,
-    AliceRequest
+    RequestButtonPressed
 )
+
+from .alice import AliceRequest

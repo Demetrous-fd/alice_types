@@ -1,9 +1,8 @@
-from typing import Optional, Union, Literal
+from typing import Optional, Literal
 
 from pydantic import BaseModel, Field, field_validator
 
-from alice_types import State, Markup, Meta, Session, NaturalLanguageUnderstanding
-from alice_types.request import RequestAudio, RequestPurchase, RequestShow
+from alice_types import Markup, NaturalLanguageUnderstanding
 from alice_types.validators import validate_dict_size
 
 
@@ -32,17 +31,3 @@ class RequestSimpleUtterance(BaseModel):
 
     def is_ping(self) -> bool:
         return self.original_utterance == "ping"
-
-
-class AliceRequest(BaseModel):
-    meta: Meta = Field(...)
-    request: Union[
-        RequestButtonPressed,
-        RequestSimpleUtterance,
-        RequestShow,
-        RequestPurchase,
-        RequestAudio,
-    ] = Field(...)
-    session: Session = Field(...)
-    state: State = Field(...)
-    version: str = Field(...)
