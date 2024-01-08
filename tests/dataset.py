@@ -6,7 +6,7 @@ import orjson
 
 from alice_types import InterfaceType, SlotsType, State, entity, request
 
-
+# TODO: Разбить файл
 class ValueField:
     def __init__(self, obj: dict, json_string: Optional[bytes] = None):
         self.obj = obj
@@ -267,7 +267,7 @@ MARKUP = {
     "ERROR": [
         {
             "value": ValueField({
-                "dangerous_context": False
+                "dangerous_context": "None"
             }),
             "expected": None,
             "raise_handler": pytest.raises(ValueError)
@@ -296,6 +296,14 @@ MARKUP = {
             "value": ref(
                 key="MARKUP:NOT_EMPTY-1",
                 obj=ValueField({"dangerous_context": True})
+            ),
+            "expected": ref("MARKUP:NOT_EMPTY-1").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="MARKUP:NOT_EMPTY-1",
+                obj=ValueField({"dangerous_context": False})
             ),
             "expected": ref("MARKUP:NOT_EMPTY-1").string,
             "raise_handler": does_not_raise()
@@ -1884,6 +1892,25 @@ ALICE_REQUEST = {
             "expected": None,
             "check_type": None,
             "raise_handler": pytest.raises((ValueError, KeyError))
+        },
+    ]
+}
+
+BIG_IMAGE_CARD = {
+    "NOT_EMPTY": [
+        {
+            "value": ref(
+                key="BIGIMAGE_CARD:NOT_EMPTY-1",
+                obj=ValueField({
+                    "image_id": "test",
+                    "title": "Заголовок",
+                    "button": None,
+                    "description": "Описание",
+                    "type": "BigImage",
+                })
+            ),
+            "expected": ref("BIGIMAGE_CARD:NOT_EMPTY-1").string,
+            "raise_handler": does_not_raise()
         },
     ]
 }

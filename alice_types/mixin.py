@@ -1,7 +1,7 @@
 from typing import Type, ClassVar, List, Any, Union
 from collections import defaultdict
 
-from pydantic import BaseModel, model_validator, ValidationError
+from pydantic import BaseModel, model_validator, ValidationError, model_serializer
 
 
 class AvailableMixin:
@@ -12,6 +12,25 @@ class AvailableMixin:
                 available.append(name)
         
         return available
+
+
+class ExcludeUnsetMixin:
+    @model_serializer
+    def _serialize(self) -> dict:
+        __exclude_if_unset__ = set()
+
+        data = dict()
+        for field_name, field_info in self.model_fields.items():
+            if field_info.json_schema_extra is not None:
+                if field_info.json_schema_extra.get("exclude_unset", False):
+                    __exclude_if_unset__.add(field_name)
+
+        __exclude_if_unset__.difference_update(self.model_fields_set)
+
+        for field, value in self:
+            if field not in __exclude_if_unset__:
+                data[field] = value
+        return data
 
 
 class DynamicFieldsTypeMixin:
@@ -64,6 +83,7 @@ class DynamicFieldsTypeMixin:
             cls.__extended_fields_type__[field].append(new_type)
         
         field_annotation = cls.__annotations__[field_name]
+        # TODO: Не работает в python 3.10
         cls.__annotations__[field_name] = Union[new_type, *field_annotation.__args__]
         
     @model_validator(mode="before")
