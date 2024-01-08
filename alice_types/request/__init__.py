@@ -13,10 +13,7 @@ from .purchase import (
     RequestPurchaseType,
     RequestPurchase
 )
-
-from .base import (
-    RequestSimpleUtterance,
-    RequestButtonPressed
-)
+from .simple import RequestSimpleUtterance
+from .button import RequestButtonPressed
 
 from .alice import AliceRequest
