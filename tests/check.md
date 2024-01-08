@@ -10,6 +10,6 @@
 - [x] NLU
 - [x] +- RequestType
 - [x] AliceRequest
-- [ ] Cards
+- [x] Cards
 - [ ] Directives
 - [ ] AliceResponse

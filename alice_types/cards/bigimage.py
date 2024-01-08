@@ -1,10 +1,10 @@
-from typing import Literal
+from typing import Literal, Optional
 
 from pydantic import Field
 
-from alice_types.cards.base import Item, CardType
+from alice_types.cards.base import CardItem, CardType
 
 
-class BigImage(Item):
+class BigImage(CardItem):
     type: Literal[CardType.BIG_IMAGE] = Field(default=CardType.BIG_IMAGE, frozen=True)
-    description: str = Field(..., max_length=1024)
+    description: Optional[str] = Field(default=None, max_length=1024, exclude_unset=True)

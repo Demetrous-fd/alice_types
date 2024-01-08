@@ -1,8 +1,9 @@
 from typing import Optional, Literal
 
-from pydantic import BaseModel, Field, field_validator, conlist
+from pydantic import BaseModel, Field, conlist
 
-from alice_types.cards.base import Item, CardType
+from alice_types.cards.base import CardItem, CardType
+from alice_types.mixin import ExcludeUnsetMixin
 from alice_types import Button
 
 
@@ -10,20 +11,15 @@ class Header(BaseModel):
     text: str = Field(..., max_length=64)
 
 
-class Footer(BaseModel):
+class Footer(BaseModel, ExcludeUnsetMixin):
     text: str = Field(..., max_length=64)
-    button: Optional[Button] = Field(default=None)
-
-    @field_validator("button", mode="after")
-    @classmethod
-    def validate_button(cls, button: Button) -> Button:
-        if button.hide:
-            button.hide = False
-        return button
+    button: Optional[Button] = Field(default=None, exclude_unset=True)
 
 
-class ItemsList(BaseModel):
+class ItemsList(BaseModel, ExcludeUnsetMixin):
     type: Literal[CardType.ITEMS_LIST] = Field(default=CardType.ITEMS_LIST, frozen=True)
-    header: Optional[Header] = Field(default=None)
-    items: conlist(Item, min_length=1, max_length=5) = Field(...) # type: ignore
-    footer: Optional[Footer] = Field(default=None)
+    header: Optional[Header] = Field(default=None, exclude_unset=True)
+    items: conlist(CardItem, min_length=1, max_length=5) = Field(
+        default=...
+    )
+    footer: Optional[Footer] = Field(default=None, exclude_unset=True)

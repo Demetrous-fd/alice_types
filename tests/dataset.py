@@ -6,6 +6,7 @@ import orjson
 
 from alice_types import InterfaceType, SlotsType, State, entity, request
 
+
 # TODO: Разбить файл
 class ValueField:
     def __init__(self, obj: dict, json_string: Optional[bytes] = None):
@@ -197,66 +198,75 @@ INTERFACES = {
 BUTTON = {
     "NOT_EMPTY": [
         {
-            "value": ValueField({"title": "Test"}),
-            "expected": orjson.dumps({
-                "title": "Test",
-                "payload": {},
-                "hide": False
-            }),
+            "value": ref(
+                key="BUTTON:NOT_EMPTY-1",
+                obj=ValueField({"title": "Test"})
+            ),
+            "expected": ref("BUTTON:NOT_EMPTY-1").string,
             "raise_handler": does_not_raise()
         },
         {
-            "value": ValueField({
-                "title": "Test",
-                "hide": True
-            }),
-            "expected": orjson.dumps({
-                "title": "Test",
-                "payload": {},
-                "hide": True
-            }),
+            "value": ref(
+                key="BUTTON:NOT_EMPTY-2",
+                obj=ValueField({
+                    "title": "Test",
+                    "hide": True
+                })
+            ),
+            "expected": ref("BUTTON:NOT_EMPTY-2").string,
             "raise_handler": does_not_raise()
         },
         {
-            "value": ValueField({
-                "title": "Test",
-                "url": "https://yandex.ru/dev/dialogs/alice/doc"
-            }),
-            "expected": orjson.dumps({
-                "title": "Test",
-                "url": "https://yandex.ru/dev/dialogs/alice/doc",
-                "payload": {},
-                "hide": False
-            }),
+            "value": ref(
+                key="BUTTON:NOT_EMPTY-3",
+                obj=ValueField({
+                    "title": "Test",
+                    "url": "https://yandex.ru/dev/dialogs/alice/doc"
+                })
+            ),
+            "expected": ref("BUTTON:NOT_EMPTY-3").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="BUTTON:NOT_EMPTY-4",
+                obj=ValueField(
+                    obj={},
+                    json_string=orjson.dumps({"title": ""})
+                )
+            ),
+            "expected": ref("BUTTON:NOT_EMPTY-4").string,
             "raise_handler": does_not_raise()
         },
     ],
     "ERROR": [
         {
-            "value": ref("EMPTY"),
+            "value": ref(
+                key="BUTTON:ERROR-1",
+                obj=ValueField({"title": "1" * 96})
+            ),
             "expected": None,
             "raise_handler": pytest.raises(ValueError)
         },
         {
-            "value": ValueField({
-                "title": "1" * 96
-            }),
+            "value": ref(
+                key="BUTTON:ERROR-2",
+                obj=ValueField({
+                    "title": "1" * 64,
+                    "payload": {"data": "1" * 4096}
+                })
+            ),
             "expected": None,
             "raise_handler": pytest.raises(ValueError)
         },
         {
-            "value": ValueField({
-                "title": "1" * 64,
-                "payload": {"data": "1" * 4096}
-            }),
-            "expected": None,
-            "raise_handler": pytest.raises(ValueError)
-        },
-        {
-            "value": ValueField({
-                "title": "Test",
-                "url": "http://www.reallylong.link/rll/HSH2zA8PLpmIIHX/_H6g_jcTksuXem56AFLr/izklCtmEUz30_EA5CNh4DxwssLIyOfEt7qfc5Fjq6NeJefBnUFm39nPOqEGRYOHiy/S8cY6XaaT45NHwyPjide_VYpYEMUw1H8WaI7LY4pw8AyBog6jtvHeXHKuo1rIjvKCFzzlBoE_vav4vn5Oe41mGaJAvb9hk42KP/E7lH5XJ0xD5_/OPUg3WlccMslaMKQkSMn4cnrHl4FOxeqqQDRc4ODs3RHlueM7ceSa3aqS0MsZhD21AtzzDVlGe5nNzZpIqUMOO8Ak9hypVudLXQqlFmzBvTddBtgiLqBEdHYq/6U7tZxW4hmTOijH25xiLUlBvw2vCjiPbtcFcZ4mrcFbpnd3AqOBu5TEOa6KaOOWv9jSpg_52ThyeuSMyH0H53Bm6Z0rYd/LRHJVgcsWQkMLBmS1pktP8l/UkVcQoNd37n2chl9D5lJLhzBFkgH3erCUrwmLJowiPBHZ89A_g87kvp3oBaTURXwi0Zfxbl67gswnHRwYZBmKa/Nq723DIU3324TmbrWTu_tnpLzLHpPpzVLEJvr3IFHYOtL7AEcmUqrCFPeD6RWrm3vn9/Rv/JaZcK7Y8aHhb9mvOCKURKP4mdpDELS03_AduWFOqoapmcs2RqlgL7Xj0G/KXSiBUnjFYRZFQ6H4KVPybA2hcDmSjItT84qfKfqU_6rOJogx1k6DvOqQI6p0jk5aPfQS2pzYexUBAEvgOd9zGnN_9yYbcqYnJQGVTGGnzxjYRwmGto6DNolxWaoBt6rV1wvwJvjbo7xSxGurIJhCXPajMbcVCeTXdgaJhwqUXOywE/8yEKk5vt5cbimq3ANJEgIk63CHrlbh6jEHcRMIHYhhytjrNEPmXqu7G9yHr6wDgDhtkyiv6GULlyvP6hbzBzYJBU5hRtLY2fifgKkJtzTg8/IMAdvsqMo9WIfrMlPCBZeoznC1mF26DV_T0YQqS9zHhWlm2Xc7uR1jVezA0lSZZec3U1RACozbbsYONVQJT6DAg/qP2ilchdHPOroYnpJ9d9HbOin7srg7esGgSx1cvPNKQymhu_EzuJxw8pBHT5JXSRDesd0oT8n_WAIOy0BgKyJCrWG3Txqsdvaa8ICAP65TCcge3xPNmf2rIlgNGVq6XwS4QyHqYwA/KLIMr5eyUTZ_mgq8nGGER3lYxdLEsGzXjdsHOTISCEw2Gwrsj07ZWE4/89/OBJp9GJVJwZfAOmWzmE20FMvcFLvSTCJiEH8MHdaUFwuxBqnxYKzQLzacoz6ZKXsxHkS/EDH_gahL9P1rckVrlgd5eynBNns2Taa_G8mHz4M0CKmLL2_Mm09esRxveKEHYuL4ZFLsvK/KZbqpEhrZCcVRyW1_NgmDc5hEEbVWAn89K45/K0KppLBTmVQwW/SPz46VLBTI/6Y0KTHXR0C4OsywfYhBOokKajfJV69Sd4ydv6ETRxjmANaA/G5MY7Sklo3b/D2yGjPR5AdZmwJ6XIxMXLgAYfBlVjl_VuncQLbxLmK6AVgoP/VmXnekIoNdni8mq5P9vIlCBIqIMGyToHMZuoBICYb7yXOPnox_jxVQd3nAjF90kebtSUrLc1LZ9MjYLN1JwayHvCLTUc93Z9JaX5oZ3e2iWxHoCfyIpq1kgjPDnArIDuRMGsWnVMct_gtmsT1CKHFvrEI_HpCw3_Q0rFjVhcjKwmjnmptZkpB6zCS146b1D5TkTUndaT8fDejqpyXdyvVr3ADK8_RM_ehn0erjt2vdFYAAb/gO4rZM6W_O4i1M0ECQmJb52iSDUKANKfmIx9WYuBIAgaggQtMDfjZ3ACJ7JqqPA2cDDMk6QlzstIDHNy0CwzUbnGMWL3GYIpwZacsG4aythgEq/e2_kFzHQIQ2t5EWuRlnQUVMI9Kc5UJPgvkXZXfCMpEjIRALdGa_SHxjYA1L97Hizac"
-            }),
+            "value": ref(
+                key="BUTTON:ERROR-3",
+                obj=ValueField({
+                    "title": "Test",
+                    "url": "http://www.reallylong.link/rll/HSH2zA8PLpmIIHX/_H6g_jcTksuXem56AFLr/izklCtmEUz30_EA5CNh4DxwssLIyOfEt7qfc5Fjq6NeJefBnUFm39nPOqEGRYOHiy/S8cY6XaaT45NHwyPjide_VYpYEMUw1H8WaI7LY4pw8AyBog6jtvHeXHKuo1rIjvKCFzzlBoE_vav4vn5Oe41mGaJAvb9hk42KP/E7lH5XJ0xD5_/OPUg3WlccMslaMKQkSMn4cnrHl4FOxeqqQDRc4ODs3RHlueM7ceSa3aqS0MsZhD21AtzzDVlGe5nNzZpIqUMOO8Ak9hypVudLXQqlFmzBvTddBtgiLqBEdHYq/6U7tZxW4hmTOijH25xiLUlBvw2vCjiPbtcFcZ4mrcFbpnd3AqOBu5TEOa6KaOOWv9jSpg_52ThyeuSMyH0H53Bm6Z0rYd/LRHJVgcsWQkMLBmS1pktP8l/UkVcQoNd37n2chl9D5lJLhzBFkgH3erCUrwmLJowiPBHZ89A_g87kvp3oBaTURXwi0Zfxbl67gswnHRwYZBmKa/Nq723DIU3324TmbrWTu_tnpLzLHpPpzVLEJvr3IFHYOtL7AEcmUqrCFPeD6RWrm3vn9/Rv/JaZcK7Y8aHhb9mvOCKURKP4mdpDELS03_AduWFOqoapmcs2RqlgL7Xj0G/KXSiBUnjFYRZFQ6H4KVPybA2hcDmSjItT84qfKfqU_6rOJogx1k6DvOqQI6p0jk5aPfQS2pzYexUBAEvgOd9zGnN_9yYbcqYnJQGVTGGnzxjYRwmGto6DNolxWaoBt6rV1wvwJvjbo7xSxGurIJhCXPajMbcVCeTXdgaJhwqUXOywE/8yEKk5vt5cbimq3ANJEgIk63CHrlbh6jEHcRMIHYhhytjrNEPmXqu7G9yHr6wDgDhtkyiv6GULlyvP6hbzBzYJBU5hRtLY2fifgKkJtzTg8/IMAdvsqMo9WIfrMlPCBZeoznC1mF26DV_T0YQqS9zHhWlm2Xc7uR1jVezA0lSZZec3U1RACozbbsYONVQJT6DAg/qP2ilchdHPOroYnpJ9d9HbOin7srg7esGgSx1cvPNKQymhu_EzuJxw8pBHT5JXSRDesd0oT8n_WAIOy0BgKyJCrWG3Txqsdvaa8ICAP65TCcge3xPNmf2rIlgNGVq6XwS4QyHqYwA/KLIMr5eyUTZ_mgq8nGGER3lYxdLEsGzXjdsHOTISCEw2Gwrsj07ZWE4/89/OBJp9GJVJwZfAOmWzmE20FMvcFLvSTCJiEH8MHdaUFwuxBqnxYKzQLzacoz6ZKXsxHkS/EDH_gahL9P1rckVrlgd5eynBNns2Taa_G8mHz4M0CKmLL2_Mm09esRxveKEHYuL4ZFLsvK/KZbqpEhrZCcVRyW1_NgmDc5hEEbVWAn89K45/K0KppLBTmVQwW/SPz46VLBTI/6Y0KTHXR0C4OsywfYhBOokKajfJV69Sd4ydv6ETRxjmANaA/G5MY7Sklo3b/D2yGjPR5AdZmwJ6XIxMXLgAYfBlVjl_VuncQLbxLmK6AVgoP/VmXnekIoNdni8mq5P9vIlCBIqIMGyToHMZuoBICYb7yXOPnox_jxVQd3nAjF90kebtSUrLc1LZ9MjYLN1JwayHvCLTUc93Z9JaX5oZ3e2iWxHoCfyIpq1kgjPDnArIDuRMGsWnVMct_gtmsT1CKHFvrEI_HpCw3_Q0rFjVhcjKwmjnmptZkpB6zCS146b1D5TkTUndaT8fDejqpyXdyvVr3ADK8_RM_ehn0erjt2vdFYAAb/gO4rZM6W_O4i1M0ECQmJb52iSDUKANKfmIx9WYuBIAgaggQtMDfjZ3ACJ7JqqPA2cDDMk6QlzstIDHNy0CwzUbnGMWL3GYIpwZacsG4aythgEq/e2_kFzHQIQ2t5EWuRlnQUVMI9Kc5UJPgvkXZXfCMpEjIRALdGa_SHxjYA1L97Hizac"
+                })
+            ),
             "expected": None,
             "raise_handler": pytest.raises(ValueError)
         },
@@ -1896,21 +1906,404 @@ ALICE_REQUEST = {
     ]
 }
 
+BASE_ITEM = {
+    "NOT_EMPTY": [
+        ref(
+            key="BASE_ITEM:NOT_EMPTY-1",
+            obj=ValueField({
+                "image_id": "test"
+            })
+        ),
+        ref(
+            key="BASE_ITEM:NOT_EMPTY-2",
+            obj=ValueField({
+                "image_id": "test",
+                "title": "Заголовок",
+                "description": "Описание",
+            })
+        ),
+        ref(
+            key="BASE_ITEM:NOT_EMPTY-3",
+            obj=ValueField({
+                "image_id": "test",
+                "title": "Заголовок",
+                "button": ref("BUTTON:NOT_EMPTY-1").obj,
+            })
+        ),
+        ref(
+            key="BASE_ITEM:NOT_EMPTY-4",
+            obj=ValueField({
+                "image_id": "test",
+                "title": "Заголовок",
+                "button": ref("BUTTON:NOT_EMPTY-2").obj,
+            })
+        ),
+        ref(
+            key="BASE_ITEM:NOT_EMPTY-5",
+            obj=ValueField({
+                "image_id": "test",
+                "title": "Заголовок",
+                "button": ref("BUTTON:NOT_EMPTY-3").obj,
+                "description": "Описание",
+            })
+        )
+    ],
+    "ERROR": [
+        ref(
+            key="BASE_ITEM:ERROR-1",
+            obj=ref("EMPTY").obj
+        ),
+        ref(
+            key="BASE_ITEM:ERROR-2",
+            obj=ValueField({
+                "image": "test",
+                "description": "1" * 1025
+            })
+        ),
+        ref(
+            key="BASE_ITEM:ERROR-3",
+            obj=ValueField({
+                "image": "test",
+                "title": "1" * 257
+            })
+        )
+    ]
+}
+
 BIG_IMAGE_CARD = {
     "NOT_EMPTY": [
         {
             "value": ref(
-                key="BIGIMAGE_CARD:NOT_EMPTY-1",
+                key="BIG_IMAGE_CARD:NOT_EMPTY-1",
                 obj=ValueField({
-                    "image_id": "test",
-                    "title": "Заголовок",
-                    "button": None,
-                    "description": "Описание",
+                    **ref("BASE_ITEM:NOT_EMPTY-1").obj,
                     "type": "BigImage",
                 })
             ),
-            "expected": ref("BIGIMAGE_CARD:NOT_EMPTY-1").string,
+            "expected": ref("BIG_IMAGE_CARD:NOT_EMPTY-1").string,
             "raise_handler": does_not_raise()
         },
+        {
+            "value": ref(
+                key="BIG_IMAGE_CARD:NOT_EMPTY-2",
+                obj=ValueField({
+                    **ref("BASE_ITEM:NOT_EMPTY-2").obj,
+                    "type": "BigImage",
+                })
+            ),
+            "expected": ref("BIG_IMAGE_CARD:NOT_EMPTY-2").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="BIG_IMAGE_CARD:NOT_EMPTY-3",
+                obj=ValueField({
+                    **ref("BASE_ITEM:NOT_EMPTY-3").obj,
+                    "type": "BigImage",
+                })
+            ),
+            "expected": ref("BIG_IMAGE_CARD:NOT_EMPTY-3").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="BIG_IMAGE_CARD:NOT_EMPTY-3",
+                obj=ValueField({
+                    **ref("BASE_ITEM:NOT_EMPTY-4").obj,
+                    "type": "BigImage",
+                })
+            ),
+            "expected": ref("BIG_IMAGE_CARD:NOT_EMPTY-3").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="BIG_IMAGE_CARD:NOT_EMPTY-4",
+                obj=ValueField({
+                    **ref("BASE_ITEM:NOT_EMPTY-5").obj,
+                    "type": "BigImage",
+                })
+            ),
+            "expected": ref("BIG_IMAGE_CARD:NOT_EMPTY-4").string,
+            "raise_handler": does_not_raise()
+        },
+    ],
+    "ERROR": [
+        {
+            "value": ref(
+                key="BIG_IMAGE_CARD:ERROR-1",
+                obj=ValueField({
+                    "type": "BigImage",
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="BIG_IMAGE_CARD:ERROR-2",
+                obj=ValueField({
+                    **ref("BASE_ITEM:ERROR-2").obj,
+                    "type": "BigImage",
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="BIG_IMAGE_CARD:ERROR-3",
+                obj=ValueField({
+                    **ref("BASE_ITEM:ERROR-3").obj,
+                    "type": "BigImage",
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
     ]
+}
+
+ITEMS_LIST_CARD = {
+    "NOT_EMPTY": [
+        {
+            "value": ref(
+                key="ITEMS_LIST_CARD:NOT_EMPTY-1",
+                obj=ValueField({
+                    "type": "ItemsList",
+                    "items": [
+                        ref("BASE_ITEM:NOT_EMPTY-1").obj
+                    ],
+                })
+            ),
+            "expected": ref("ITEMS_LIST_CARD:NOT_EMPTY-1").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ITEMS_LIST_CARD:NOT_EMPTY-2",
+                obj=ValueField({
+                    "type": "ItemsList",
+                    "items": [
+                        ref("BASE_ITEM:NOT_EMPTY-1").obj,
+                        ref("BASE_ITEM:NOT_EMPTY-2").obj,
+                        ref("BASE_ITEM:NOT_EMPTY-3").obj,
+                        ref("BASE_ITEM:NOT_EMPTY-4").obj,
+                        ref("BASE_ITEM:NOT_EMPTY-5").obj,
+                    ],
+                })
+            ),
+            "expected": ref("ITEMS_LIST_CARD:NOT_EMPTY-2").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ITEMS_LIST_CARD:NOT_EMPTY-3",
+                obj=ValueField({
+                    "type": "ItemsList",
+                    "header": {
+                        "text": "1" * 64
+                    },
+                    "items": [
+                        ref("BASE_ITEM:NOT_EMPTY-1").obj
+                    ],
+                })
+            ),
+            "expected": ref("ITEMS_LIST_CARD:NOT_EMPTY-3").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ITEMS_LIST_CARD:NOT_EMPTY-4",
+                obj=ValueField({
+                    "type": "ItemsList",
+                    "items": [
+                        ref("BASE_ITEM:NOT_EMPTY-1").obj
+                    ],
+                    "footer": {
+                        "text": "1" * 64
+                    },
+                })
+            ),
+            "expected": ref("ITEMS_LIST_CARD:NOT_EMPTY-4").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ITEMS_LIST_CARD:NOT_EMPTY-5",
+                obj=ValueField({
+                    "type": "ItemsList",
+                    "items": [
+                        ref("BASE_ITEM:NOT_EMPTY-1").obj
+                    ],
+                    "footer": {
+                        "text": "1" * 64,
+                        "button": ref("BUTTON:NOT_EMPTY-1").obj
+                    },
+                })
+            ),
+            "expected": ref("ITEMS_LIST_CARD:NOT_EMPTY-5").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ITEMS_LIST_CARD:NOT_EMPTY-6",
+                obj=ValueField({
+                    "type": "ItemsList",
+                    "header": {
+                        "text": "1" * 64
+                    },
+                    "items": [
+                        ref("BASE_ITEM:NOT_EMPTY-1").obj
+                    ],
+                    "footer": {
+                        "text": "1" * 64,
+                        "button": ref("BUTTON:NOT_EMPTY-1").obj
+                    },
+                })
+            ),
+            "expected": ref("ITEMS_LIST_CARD:NOT_EMPTY-6").string,
+            "raise_handler": does_not_raise()
+        },
+    ],
+    "ERROR": [
+        {
+            "value": ref(
+                key="ITEMS_LIST_CARD:ERROR-1",
+                obj=ValueField({
+                    "type": "ItemsList"
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="ITEMS_LIST_CARD:ERROR-2",
+                obj=ValueField({
+                    "type": "ItemsList",
+                    "items": [],
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="ITEMS_LIST_CARD:ERROR-3",
+                obj=ValueField({
+                    "type": "ItemsList",
+                    "items": [
+                                 ref("BASE_ITEM:NOT_EMPTY-1").obj
+                             ] * 6,
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="ITEMS_LIST_CARD:ERROR-4",
+                obj=ValueField({
+                    "type": "ItemsList",
+                    "items": [
+                        ref("BASE_ITEM:NOT_EMPTY-1").obj
+                    ],
+                    "footer": {
+                        "text": "1" * 65,
+                        "button": ref("BUTTON:NOT_EMPTY-1").obj
+                    },
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="ITEMS_LIST_CARD:ERROR-5",
+                obj=ValueField({
+                    "type": "ItemsList",
+                    "header": {
+                        "text": "1" * 65
+                    },
+                    "items": [
+                        ref("BASE_ITEM:NOT_EMPTY-1").obj
+                    ],
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+    ]
+}
+
+IMAGE_GALLERY_CARD = {
+    "NOT_EMPTY": [
+        {
+            "value": ref(
+                key="IMAGE_GALLERY_CARD:NOT_EMPTY-1",
+                obj=ValueField({
+                    "type": "ImageGallery",
+                    "items": [
+                        ref("BASE_ITEM:NOT_EMPTY-1").obj
+                    ],
+                })
+            ),
+            "expected": ref("IMAGE_GALLERY_CARD:NOT_EMPTY-1").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="IMAGE_GALLERY_CARD:NOT_EMPTY-2",
+                obj=ValueField({
+                    "type": "ImageGallery",
+                    "items": [
+                                 ref("BASE_ITEM:NOT_EMPTY-1").obj,
+                                 ref("BASE_ITEM:NOT_EMPTY-2").obj,
+                                 ref("BASE_ITEM:NOT_EMPTY-3").obj,
+                                 ref("BASE_ITEM:NOT_EMPTY-4").obj,
+                                 ref("BASE_ITEM:NOT_EMPTY-5").obj,
+                             ] * 2,
+                })
+            ),
+            "expected": ref("IMAGE_GALLERY_CARD:NOT_EMPTY-2").string,
+            "raise_handler": does_not_raise()
+        },
+    ],
+    "ERROR": [
+        {
+            "value": ref(
+                key="IMAGE_GALLERY_CARD:ERROR-1",
+                obj=ValueField({
+                    "type": "ImageGallery"
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="IMAGE_GALLERY_CARD:ERROR-2",
+                obj=ValueField({
+                    "type": "ImageGallery",
+                    "items": [],
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="IMAGE_GALLERY_CARD:ERROR-3",
+                obj=ValueField({
+                    "type": "ImageGallery",
+                    "items": [
+                                 ref("BASE_ITEM:NOT_EMPTY-1").obj
+                             ] * 11,
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+    ],
 }

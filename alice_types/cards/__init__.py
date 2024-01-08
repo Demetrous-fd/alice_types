@@ -1,4 +1,4 @@
-from .base import CardType, Item
+from .base import CardType, CardItem
 
 from .bigimage import BigImage
 from .gallery import ImageGallery
@@ -7,7 +7,7 @@ from .itemslist import ItemsList, Header, Footer
 
 __all__ = [
     "CardType",
-    "Item",
+    "CardItem",
     "BigImage",
     "ImageGallery",
     "Header",

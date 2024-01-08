@@ -1,9 +1,10 @@
 from typing import Optional
 from enum import Enum
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import BaseModel, Field
 
-from alice_types import Button  # type: ignore
+from alice_types import Button
+from alice_types.mixin import ExcludeUnsetMixin
 
 
 class CardType(str, Enum):
@@ -12,14 +13,17 @@ class CardType(str, Enum):
     ITEMS_LIST = "ItemsList"
 
 
-class Item(BaseModel):
+class CardItem(BaseModel, ExcludeUnsetMixin):
     image_id: str = Field(...)
-    title: str = Field(..., max_length=128)
-    button: Optional[Button] = Field(default=None, description="Свойства кликабельного изображения.")
-    description: Optional[str] = Field(default=None, max_length=256)
-
-    @model_validator(mode='after')
-    def validate(self):
-        if self.button:
-            self.button.hide = False
-        return self
+    title: Optional[str] = Field(default=None, max_length=128, exclude_unset=True)
+    button: Optional[Button] = Field(
+        default=None,
+        exclude_unset=True,
+        description="Свойства кликабельного изображения.",
+    )
+    description: Optional[str] = Field(
+        default=None,
+        max_length=256,
+        exclude_unset=True,
+        description="Описание карточки, можно использовать на любом типе карточек."
+    )
