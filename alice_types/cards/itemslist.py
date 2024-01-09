@@ -13,13 +13,13 @@ class Header(BaseModel):
 
 class Footer(BaseModel, ExcludeUnsetMixin):
     text: str = Field(..., max_length=64)
-    button: Optional[Button] = Field(default=None, exclude_unset=True)
+    button: Optional[Button] = Field(default=None, json_schema_extra={"exclude_unset": True})
 
 
 class ItemsList(BaseModel, ExcludeUnsetMixin):
     type: Literal[CardType.ITEMS_LIST] = Field(default=CardType.ITEMS_LIST, frozen=True)
-    header: Optional[Header] = Field(default=None, exclude_unset=True)
+    header: Optional[Header] = Field(default=None, json_schema_extra={"exclude_unset": True})
     items: conlist(CardItem, min_length=1, max_length=5) = Field(
         default=...
     )
-    footer: Optional[Footer] = Field(default=None, exclude_unset=True)
+    footer: Optional[Footer] = Field(default=None, json_schema_extra={"exclude_unset": True})

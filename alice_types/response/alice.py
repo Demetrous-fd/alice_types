@@ -18,7 +18,7 @@ class AliceResponse(BaseModel, ExcludeUnsetMixin):
     )
     session_state: Optional[dict] = Field(
         default=None,
-        exclude_unset=True,
+        json_schema_extra={"exclude_unset": True},
         description="""
 Объект, содержащий состояние навыка для хранения в контексте сессии.
 Состояние сессии перестанет храниться, если в ответе навыка не вернуть свойство session_state. 
@@ -28,7 +28,7 @@ class AliceResponse(BaseModel, ExcludeUnsetMixin):
     )
     user_state_update: Optional[dict] = Field(
         default=None,
-        exclude_unset=True,
+        json_schema_extra={"exclude_unset": True},
         description="""
 Объект, содержащий состояние навыка для хранения в контексте авторизованного пользователя.
 Чтобы удалить поле, записанное в состояние пользователя, навык должен отправить это поле со значением None (null).
@@ -37,7 +37,7 @@ class AliceResponse(BaseModel, ExcludeUnsetMixin):
     )
     application_state: Optional[dict] = Field(
         default=None,
-        exclude_unset=True,
+        json_schema_extra={"exclude_unset": True},
         description="""
 Объект, содержащий состояние навыка для хранения в контексте экземпляра приложения пользователя.
 Чтобы очистить сохраненное состояние приложения, навык может отправить это поле со значением {} — пустым словарем.
@@ -46,7 +46,7 @@ class AliceResponse(BaseModel, ExcludeUnsetMixin):
     )
     analytics: Optional[Analytics] = Field(
         default=None,
-        exclude_unset=True,
+        json_schema_extra={"exclude_unset": True},
         description="Объект с данными для аналитики. Доступен навыкам с подключенным параметром Настройки AppMetrica. "
     )
     version: str = Field(

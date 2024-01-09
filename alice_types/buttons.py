@@ -12,9 +12,9 @@ class Button(BaseModel, ExcludeUnsetMixin):
         max_length=64,
         description="Если для кнопки не указано свойство url, по нажатию текст кнопки будет отправлен навыку как реплика пользователя."
     )
-    url: Optional[AnyHttpUrl] = Field(default=None, max_length=1024, exclude_unset=True)
-    payload: dict = Field(default_factory=dict, exclude_unset=True)
-    hide: bool = Field(default=False, exclude_unset=True)
+    url: Optional[AnyHttpUrl] = Field(default=None, max_length=1024, json_schema_extra={"exclude_unset": True})
+    payload: dict = Field(default_factory=dict, json_schema_extra={"exclude_unset": True})
+    hide: bool = Field(default=False, json_schema_extra={"exclude_unset": True})
 
     validate_payload_size = field_validator("payload", mode="before")(
         validate_dict_size(max_size=4094)

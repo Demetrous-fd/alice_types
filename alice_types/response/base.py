@@ -17,7 +17,7 @@ class TextToSpeechModel(BaseModel, ExcludeUnsetMixin):
     )
     tts: Optional[str] = Field(
         default=None,
-        exclude_unset=True,
+        json_schema_extra={"exclude_unset": True},
         description="""
 Ответ в формате TTS (text-to-speech). Максимум 1024 символа.
 Теги <speaker>, которые используются для ссылок на звуки, не учитываются в ограничении в 1024 символа на длину значения свойства tts.
@@ -34,11 +34,11 @@ class Response(TextToSpeechModel):
         BigImage,
         ItemsList,
         ImageGallery
-    ]] = Field(default=None, exclude_unset=True)
-    buttons: Optional[List[Button]] = Field(default_factory=list, exclude_unset=True)
+    ]] = Field(default=None, json_schema_extra={"exclude_unset": True})
+    buttons: Optional[List[Button]] = Field(default_factory=list, json_schema_extra={"exclude_unset": True})
     end_session: bool = Field(default=False)
     directives: Optional[Union[
         AudioPlayerPlay,
         AudioPlayerStop,
         StartAccountLinking
-    ]] = Field(default=None, exclude_unset=True)
+    ]] = Field(default=None, json_schema_extra={"exclude_unset": True})

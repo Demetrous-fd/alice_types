@@ -15,15 +15,15 @@ class CardType(str, Enum):
 
 class CardItem(BaseModel, ExcludeUnsetMixin):
     image_id: str = Field(...)
-    title: Optional[str] = Field(default=None, max_length=128, exclude_unset=True)
+    title: Optional[str] = Field(default=None, max_length=128, json_schema_extra={"exclude_unset": True})
     button: Optional[Button] = Field(
         default=None,
-        exclude_unset=True,
+        json_schema_extra={"exclude_unset": True},
         description="Свойства кликабельного изображения.",
     )
     description: Optional[str] = Field(
         default=None,
         max_length=256,
-        exclude_unset=True,
+        json_schema_extra={"exclude_unset": True},
         description="Описание карточки, можно использовать на любом типе карточек."
     )
