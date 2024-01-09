@@ -1,8 +1,9 @@
-from decimal import Decimal
-from typing import Literal
+from typing import Literal, Optional, Union
 from enum import Enum
 
 from pydantic import BaseModel, Field
+
+from alice_types.mixin import ExcludeUnsetMixin
 
 
 class AudioActionType(str, Enum):
@@ -16,7 +17,7 @@ class AudioPlayerImage(BaseModel):
 
 class AudioPlayerStream(BaseModel):
     url: str = Field(..., description="URL аудиопотока.")
-    offset_ms: Decimal = Field(..., description="Временная метка, с которой необходимо проигрывать трек.")
+    offset_ms: int = Field(..., description="Временная метка, с которой необходимо проигрывать трек.")
     token: str = Field(
         ...,
         description="Идентификатор потока. Может быть использован для кеширования изображений "
@@ -24,16 +25,36 @@ class AudioPlayerStream(BaseModel):
     )
 
 
-class AudioPlayerMetaData(BaseModel):
-    title: str = Field(..., description="Описание трека. Например, название композиции.")
-    sub_title: str = Field(..., description="Дополнительное описание трека. Например, имя артиста.")
-    art: AudioPlayerImage = Field(..., description="Обложка альбома трека.")
-    background_image: AudioPlayerImage = Field(..., description="Фоновое изображение.")
+class AudioPlayerMetaData(BaseModel, ExcludeUnsetMixin):
+    title: Optional[str] = Field(
+        default=None,
+        json_schema_extra={"exclude_unset": True},
+        description="Описание трека. Например, название композиции."
+    )
+    sub_title: Optional[str] = Field(
+        default=None,
+        json_schema_extra={"exclude_unset": True},
+        description="Дополнительное описание трека. Например, имя артиста."
+    )
+    art: Optional[AudioPlayerImage] = Field(
+        default=None,
+        json_schema_extra={"exclude_unset": True},
+        description="Обложка альбома трека."
+    )
+    background_image: Optional[AudioPlayerImage] = Field(
+        default=None,
+        json_schema_extra={"exclude_unset": True},
+        description="Фоновое изображение."
+    )
 
 
-class AudioPlayerItem(BaseModel):
+class AudioPlayerItem(BaseModel, ExcludeUnsetMixin):
     stream: AudioPlayerStream = Field(..., description="Описание аудиопотока.")
-    metadata: AudioPlayerMetaData = Field(..., description="Метаданные проигрываемого трека.")
+    metadata: Optional[AudioPlayerMetaData] = Field(
+        default=None,
+        json_schema_extra={"exclude_unset": True},
+        description="Метаданные проигрываемого трека."
+    )
 
 
 class AudioPlayerPlay(BaseModel):
@@ -43,3 +64,7 @@ class AudioPlayerPlay(BaseModel):
 
 class AudioPlayerStop(BaseModel):
     action: Literal[AudioActionType.STOP] = Field(..., description="Команда директивы.")
+
+
+class AudioPlayer(BaseModel):
+    audio_player: Union[AudioPlayerPlay, AudioPlayerStop] = Field(...)

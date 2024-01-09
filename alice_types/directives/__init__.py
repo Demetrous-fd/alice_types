@@ -6,7 +6,8 @@ from .audio import (
     AudioPlayerStream,
     AudioActionType,
     AudioPlayerPlay,
-    AudioPlayerStop
+    AudioPlayerStop,
+    AudioPlayer
 )
 
 __all__ = [
@@ -17,5 +18,6 @@ __all__ = [
     "AudioActionType",
     "AudioPlayerPlay",
     "AudioPlayerStop",
+    "AudioPlayer",
     "StartAccountLinking"
 ]

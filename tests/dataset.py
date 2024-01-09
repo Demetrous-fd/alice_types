@@ -5,6 +5,7 @@ import pytest
 import orjson
 
 from alice_types import InterfaceType, SlotsType, State, entity, request
+from alice_types.directives import audio
 
 
 # TODO: Разбить файл
@@ -2306,4 +2307,146 @@ IMAGE_GALLERY_CARD = {
             "raise_handler": pytest.raises(ValueError)
         },
     ],
+}
+
+AUDIO_PLAYER_DIRECTIVE = {
+    "NOT_EMPTY": [
+        {
+            "value": ref(
+                key="AUDIO_DIRECTIVE:Play:NOT_EMPTY-1",
+                obj=ValueField({
+                    "audio_player": {
+                        "action": "Play",
+                        "item": {
+                            "stream": {
+                                "url": "https://example.com/stream-audio-url",
+                                "offset_ms": 0,
+                                "token": "token"
+                            },
+                            "metadata": {
+                                "title": "Песня",
+                                "sub_title": "Артист",
+                                "art": {
+                                    "url": "https://example.com/art.png"
+                                },
+                                "background_image": {
+                                    "url": "https://example.com/background-image.png"
+                                }
+                            }
+                        }
+                    }
+                })
+            ),
+            "expected": ref("AUDIO_DIRECTIVE:Play:NOT_EMPTY-1").string,
+            "command": audio.AudioPlayerPlay,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="AUDIO_DIRECTIVE:Play:NOT_EMPTY-2",
+                obj=ValueField({
+                    "audio_player": {
+                        "action": "Play",
+                        "item": {
+                            "stream": {
+                                "url": "https://example.com/stream-audio-url",
+                                "offset_ms": 0,
+                                "token": "token"
+                            },
+                            "metadata": {
+                                "title": "Песня",
+                                "sub_title": "Артист"
+                            }
+                        }
+                    }
+                })
+            ),
+            "expected": ref("AUDIO_DIRECTIVE:Play:NOT_EMPTY-2").string,
+            "command": audio.AudioPlayerPlay,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="AUDIO_DIRECTIVE:Play:NOT_EMPTY-3",
+                obj=ValueField({
+                    "audio_player": {
+                        "action": "Play",
+                        "item": {
+                            "stream": {
+                                "url": "https://example.com/stream-audio-url",
+                                "offset_ms": 0,
+                                "token": "token"
+                            }
+                        }
+                    }
+                })
+            ),
+            "expected": ref("AUDIO_DIRECTIVE:Play:NOT_EMPTY-3").string,
+            "command": audio.AudioPlayerPlay,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="AUDIO_DIRECTIVE:Stop:NOT_EMPTY-1",
+                obj=ValueField({
+                    "audio_player": {
+                        "action": "Stop"
+                    }
+                })
+            ),
+            "expected": ref("AUDIO_DIRECTIVE:Stop:NOT_EMPTY-1").string,
+            "command": audio.AudioPlayerStop,
+            "raise_handler": does_not_raise()
+        },
+    ],
+    "ERROR": [
+        {
+            "value": ref(
+                key="AUDIO_DIRECTIVE:ERROR-1",
+                obj=ValueField({
+                    "audio_player": {}
+                })
+            ),
+            "expected": None,
+            "command": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="AUDIO_DIRECTIVE:ERROR-2",
+                obj=ValueField({
+                    "audio_player": {
+                        "action": "Play",
+                        "item": {
+                            "stream": {
+                                "url": "https://example.com/stream-audio-url"
+                            }
+                        }
+                    }
+                })
+            ),
+            "expected": None,
+            "command": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="AUDIO_DIRECTIVE:ERROR-3",
+                obj=ValueField({
+                    "audio_player": {
+                        "action": "Play",
+                        "item": {
+                            "stream": {
+                                "offset_ms": 0,
+                                "token": "token"
+                            }
+                        }
+                    }
+                })
+            ),
+            "expected": None,
+            "command": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+    ]
 }
