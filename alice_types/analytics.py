@@ -1,6 +1,8 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel, Field, field_validator
+
+from alice_types.mixin import ExcludeUnsetMixin
 
 
 def _count_levels(dictionary):
@@ -18,9 +20,12 @@ def _count_levels(dictionary):
     return max_depth
 
 
-class AnalyticsEvent(BaseModel):
+class AnalyticsEvent(BaseModel, ExcludeUnsetMixin):
     name: str = Field(...)
-    value: dict = Field(default_factory=dict)
+    value: Optional[dict] = Field(
+        default=None,
+        json_schema_extra={"exclude_unset": True}
+    )
     
     @field_validator("value", mode="before")
     @classmethod

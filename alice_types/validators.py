@@ -4,7 +4,7 @@ import re
 from pydantic import ValidationInfo
 import orjson
 
-SPEAKER_REGEX_PATTERN = re.compile(r'<speaker>.*?</speaker>', re.DOTALL)
+SPEAKER_REGEX_PATTERN = re.compile(r'<speaker audio=".*>', re.DOTALL)
 
 
 def validate_tts_size(value: str, info: ValidationInfo) -> str:

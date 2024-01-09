@@ -2450,3 +2450,240 @@ AUDIO_PLAYER_DIRECTIVE = {
         },
     ]
 }
+
+ALICE_RESPONSE = {
+    "NOT_EMPTY": [
+        {
+            "value": ref(
+                key="ALICE_RESPONSE:NOT_EMPTY-1",
+                obj=ValueField({
+                    "response": {
+                        "text": ""
+                    },
+                    "version": "1.0"
+                })
+            ),
+            "expected": ref("ALICE_RESPONSE:NOT_EMPTY-1").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ALICE_RESPONSE:NOT_EMPTY-2",
+                obj=ValueField({
+                    "response": {
+                        "text": "Привет",
+                        "tts": "Пока",
+                        "end_session": True
+                    },
+                    "version": "1.0"
+                })
+            ),
+            "expected": ref("ALICE_RESPONSE:NOT_EMPTY-2").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ALICE_RESPONSE:NOT_EMPTY-3",
+                obj=ValueField({
+                    "response": {
+                        "text": "Привет",
+                        "tts": "Пока",
+                        "end_session": True
+                    },
+                    "version": "1.0"
+                })
+            ),
+            "expected": ref("ALICE_RESPONSE:NOT_EMPTY-3").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ALICE_RESPONSE:NOT_EMPTY-4",
+                obj=ValueField({
+                    "response": {
+                        "text": "Здравствуйте! Это мы, хороводоведы.",
+                        "tts": "Здравствуйте! Это мы, хоров+одо в+еды.",
+                        "buttons": [
+                            {
+                                "title": "Надпись на кнопке",
+                                "url": "https://example.com/",
+                                "payload": {},
+                                "hide": True
+                            }
+                        ],
+                        "end_session": False,
+                        "directives": {}
+                    },
+                    "session_state": {
+                        "value": 10
+                    },
+                    "user_state_update": {
+                        "value": 42
+                    },
+                    "application_state": {
+                        "value": 37
+                    },
+                    "analytics": {
+                        "events": [
+                            {
+                                "name": "custom event"
+                            },
+                            {
+                                "name": "another custom event",
+                                "value": {
+                                    "field": "some value",
+                                    "second field": {
+                                        "third field": "custom value"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "version": "1.0"
+                })
+            ),
+            "expected": ref("ALICE_RESPONSE:NOT_EMPTY-4").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ALICE_RESPONSE:NOT_EMPTY-5",
+                obj=ValueField({
+                    "response": {
+                        "text": "Привет",
+                        "card": ref("BIG_IMAGE_CARD:NOT_EMPTY-4").obj
+                    },
+                    "version": "1.0"
+                })
+            ),
+            "expected": ref("ALICE_RESPONSE:NOT_EMPTY-5").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ALICE_RESPONSE:NOT_EMPTY-6",
+                obj=ValueField({
+                    "response": {
+                        "text": "Привет",
+                        "card": ref("ITEMS_LIST_CARD:NOT_EMPTY-2").obj
+                    },
+                    "version": "1.0"
+                })
+            ),
+            "expected": ref("ALICE_RESPONSE:NOT_EMPTY-6").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ALICE_RESPONSE:NOT_EMPTY-7",
+                obj=ValueField({
+                    "response": {
+                        "text": "Привет",
+                        "card": ref("IMAGE_GALLERY_CARD:NOT_EMPTY-2").obj
+                    },
+                    "version": "1.0"
+                })
+            ),
+            "expected": ref("ALICE_RESPONSE:NOT_EMPTY-7").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ALICE_RESPONSE:NOT_EMPTY-8",
+                obj=ValueField({
+                    "response": {
+                        "text": "Включаю",
+                        "directives": ref("AUDIO_DIRECTIVE:Play:NOT_EMPTY-1").obj
+                    },
+                    "version": "1.0"
+                })
+            ),
+            "expected": ref("ALICE_RESPONSE:NOT_EMPTY-8").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ALICE_RESPONSE:NOT_EMPTY-9",
+                obj=ValueField({
+                    "response": {
+                        "text": "Отключаю",
+                        "directives": ref("AUDIO_DIRECTIVE:Stop:NOT_EMPTY-1").obj
+                    },
+                    "version": "1.0"
+                })
+            ),
+            "expected": ref("ALICE_RESPONSE:NOT_EMPTY-9").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ALICE_RESPONSE:NOT_EMPTY-10",
+                obj=ValueField({
+                    "response": {
+                        "text": "",
+                        "tts": "1" * 1024 + "<speaker audio=\"alice-sounds-game-win-1.opus\">"
+                    },
+                    "version": "1.0"
+                })
+            ),
+            "expected": ref("ALICE_RESPONSE:NOT_EMPTY-10").string,
+            "raise_handler": does_not_raise()
+        },
+    ],
+    "ERROR": [
+        {
+            "value": ref(
+                key="ALICE_RESPONSE:ERROR-1",
+                obj=ValueField({})
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="ALICE_RESPONSE:ERROR-2",
+                obj=ValueField({
+                    "version": "1.0"
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="ALICE_RESPONSE:ERROR-3",
+                obj=ValueField({
+                    "end_session": None
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="ALICE_RESPONSE:ERROR-4",
+                obj=ValueField({
+                    "response": {
+                        "text": "1" * 1025
+                    },
+                    "version": "1.0"
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+        {
+            "value": ref(
+                key="ALICE_RESPONSE:ERROR-5",
+                obj=ValueField({
+                    "response": {
+                        "tts": "1" * 1025
+                    },
+                    "version": "1.0"
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
+    ]
+}

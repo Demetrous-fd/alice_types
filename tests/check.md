@@ -11,5 +11,5 @@
 - [x] +- RequestType
 - [x] AliceRequest
 - [x] Cards
-- [ ] Directives
-- [ ] AliceResponse
+- [x] +- Directives
+- [x] AliceResponse
