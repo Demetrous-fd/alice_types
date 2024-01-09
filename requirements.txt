@@ -1,6 +1,5 @@
 annotated-types==0.6.0
 colorama==0.4.6
-loguru==0.7.2
 orjson==3.9.10
 pydantic==2.5.2
 pydantic-core==2.14.5
