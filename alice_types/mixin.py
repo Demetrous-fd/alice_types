@@ -1,4 +1,4 @@
-from typing import Type, ClassVar, List, Any, Union
+from typing import Type, ClassVar, List, Any
 from collections import defaultdict
 
 from pydantic import BaseModel, model_validator, ValidationError, model_serializer
@@ -83,8 +83,9 @@ class DynamicFieldsTypeMixin:
             cls.__extended_fields_type__[field].append(new_type)
         
         field_annotation = cls.__annotations__[field_name]
-        # TODO: Не работает в python 3.10
-        cls.__annotations__[field_name] = Union[new_type, *field_annotation.__args__]
+        
+        field_annotation.__args__ = (new_type, *field_annotation.__args__)
+        cls.__annotations__[field_name] = field_annotation
         
     @model_validator(mode="before")
     @classmethod
