@@ -64,7 +64,3 @@ class AudioPlayerPlay(BaseModel):
 
 class AudioPlayerStop(BaseModel):
     action: Literal[AudioActionType.STOP] = Field(..., description="Команда директивы.")
-
-
-class AudioPlayer(BaseModel):
-    audio_player: Union[AudioPlayerPlay, AudioPlayerStop] = Field(...)

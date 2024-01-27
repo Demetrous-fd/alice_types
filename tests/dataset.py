@@ -5,11 +5,11 @@ import pytest
 import orjson
 
 from alice_types.request import (
-    InterfaceType, 
-    SlotsType, 
-    State, 
-    entity, 
-    RequestAudioType, 
+    InterfaceType,
+    SlotsType,
+    State,
+    entity,
+    RequestAudioType,
     RequestAudioErrorType
 )
 from alice_types.response import directives
@@ -2317,11 +2317,22 @@ IMAGE_GALLERY_CARD = {
     ],
 }
 
-AUDIO_PLAYER_DIRECTIVE = {
+DIRECTIVES = {
+    "EMPTY": [
+        {
+            "value": ref(
+                key="DIRECTIVES:EMPTY-1",
+                obj=ref("EMPTY")
+            ),
+            "expected": ref("DIRECTIVES:EMPTY-1").string,
+            "directives": None,
+            "raise_handler": does_not_raise()
+        },
+    ],
     "NOT_EMPTY": [
         {
             "value": ref(
-                key="AUDIO_DIRECTIVE:Play:NOT_EMPTY-1",
+                key="DIRECTIVES:AUDIO:Play:NOT_EMPTY-1",
                 obj=ValueField({
                     "audio_player": {
                         "action": "Play",
@@ -2345,13 +2356,13 @@ AUDIO_PLAYER_DIRECTIVE = {
                     }
                 })
             ),
-            "expected": ref("AUDIO_DIRECTIVE:Play:NOT_EMPTY-1").string,
-            "command": directives.audio.AudioPlayerPlay,
+            "expected": ref("DIRECTIVES:AUDIO:Play:NOT_EMPTY-1").string,
+            "commands": [directives.audio.AudioPlayerPlay],
             "raise_handler": does_not_raise()
         },
         {
             "value": ref(
-                key="AUDIO_DIRECTIVE:Play:NOT_EMPTY-2",
+                key="DIRECTIVES:AUDIO:Play:NOT_EMPTY-2",
                 obj=ValueField({
                     "audio_player": {
                         "action": "Play",
@@ -2369,13 +2380,13 @@ AUDIO_PLAYER_DIRECTIVE = {
                     }
                 })
             ),
-            "expected": ref("AUDIO_DIRECTIVE:Play:NOT_EMPTY-2").string,
-            "command": directives.audio.AudioPlayerPlay,
+            "expected": ref("DIRECTIVES:AUDIO:Play:NOT_EMPTY-2").string,
+            "commands": [directives.audio.AudioPlayerPlay],
             "raise_handler": does_not_raise()
         },
         {
             "value": ref(
-                key="AUDIO_DIRECTIVE:Play:NOT_EMPTY-3",
+                key="DIRECTIVES:AUDIO:Play:NOT_EMPTY-3",
                 obj=ValueField({
                     "audio_player": {
                         "action": "Play",
@@ -2389,39 +2400,64 @@ AUDIO_PLAYER_DIRECTIVE = {
                     }
                 })
             ),
-            "expected": ref("AUDIO_DIRECTIVE:Play:NOT_EMPTY-3").string,
-            "command": directives.audio.AudioPlayerPlay,
+            "expected": ref("DIRECTIVES:AUDIO:Play:NOT_EMPTY-3").string,
+            "commands": [directives.audio.AudioPlayerPlay],
             "raise_handler": does_not_raise()
         },
         {
             "value": ref(
-                key="AUDIO_DIRECTIVE:Stop:NOT_EMPTY-1",
+                key="DIRECTIVES:AUDIO:Stop:NOT_EMPTY-1",
                 obj=ValueField({
                     "audio_player": {
                         "action": "Stop"
                     }
                 })
             ),
-            "expected": ref("AUDIO_DIRECTIVE:Stop:NOT_EMPTY-1").string,
-            "command": directives.audio.AudioPlayerStop,
+            "expected": ref("DIRECTIVES:AUDIO:Stop:NOT_EMPTY-1").string,
+            "commands": [directives.audio.AudioPlayerStop],
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="DIRECTIVES:START_ACCOUNT_LINKING",
+                obj=ValueField({
+                    "start_account_linking": {}
+                })
+            ),
+            "expected": ref("DIRECTIVES:START_ACCOUNT_LINKING").string,
+            "commands": [directives.account.StartAccountLinking],
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="DIRECTIVES:MANY",
+                obj=ValueField({
+                    "audio_player": {
+                        "action": "Stop"
+                    },
+                    "start_account_linking": {},
+                })
+            ),
+            "expected": ref("DIRECTIVES:MANY").string,
+            "commands": [directives.account.StartAccountLinking, directives.audio.AudioPlayerStop],
             "raise_handler": does_not_raise()
         },
     ],
     "ERROR": [
         {
             "value": ref(
-                key="AUDIO_DIRECTIVE:ERROR-1",
+                key="DIRECTIVES:AUDIO:ERROR-1",
                 obj=ValueField({
                     "audio_player": {}
                 })
             ),
             "expected": None,
-            "command": None,
+            "commands": None,
             "raise_handler": pytest.raises(ValueError)
         },
         {
             "value": ref(
-                key="AUDIO_DIRECTIVE:ERROR-2",
+                key="DIRECTIVES:AUDIO:ERROR-2",
                 obj=ValueField({
                     "audio_player": {
                         "action": "Play",
@@ -2434,12 +2470,12 @@ AUDIO_PLAYER_DIRECTIVE = {
                 })
             ),
             "expected": None,
-            "command": None,
+            "commands": None,
             "raise_handler": pytest.raises(ValueError)
         },
         {
             "value": ref(
-                key="AUDIO_DIRECTIVE:ERROR-3",
+                key="DIRECTIVES:AUDIO:ERROR-3",
                 obj=ValueField({
                     "audio_player": {
                         "action": "Play",
@@ -2453,7 +2489,7 @@ AUDIO_PLAYER_DIRECTIVE = {
                 })
             ),
             "expected": None,
-            "command": None,
+            "commands": None,
             "raise_handler": pytest.raises(ValueError)
         },
     ]
@@ -2601,7 +2637,7 @@ ALICE_RESPONSE = {
                 obj=ValueField({
                     "response": {
                         "text": "Включаю",
-                        "directives": ref("AUDIO_DIRECTIVE:Play:NOT_EMPTY-1").obj
+                        "directives": ref("DIRECTIVES:AUDIO:Play:NOT_EMPTY-1").obj
                     },
                     "version": "1.0"
                 })
@@ -2615,7 +2651,7 @@ ALICE_RESPONSE = {
                 obj=ValueField({
                     "response": {
                         "text": "Отключаю",
-                        "directives": ref("AUDIO_DIRECTIVE:Stop:NOT_EMPTY-1").obj
+                        "directives": ref("DIRECTIVES:AUDIO:Stop:NOT_EMPTY-1").obj
                     },
                     "version": "1.0"
                 })
@@ -2635,6 +2671,20 @@ ALICE_RESPONSE = {
                 })
             ),
             "expected": ref("ALICE_RESPONSE:NOT_EMPTY-10").string,
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
+                key="ALICE_RESPONSE:NOT_EMPTY-11",
+                obj=ValueField({
+                    "response": {
+                        "text": "Пройдите авторизацию",
+                        "directives": ref("DIRECTIVES:START_ACCOUNT_LINKING").obj
+                    },
+                    "version": "1.0"
+                })
+            ),
+            "expected": ref("ALICE_RESPONSE:NOT_EMPTY-11").string,
             "raise_handler": does_not_raise()
         },
     ],

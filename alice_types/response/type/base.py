@@ -6,7 +6,7 @@ from alice_types.response import Button
 from alice_types.mixin import ExcludeUnsetMixin
 from alice_types.validators import validate_tts_size
 from alice_types.response.cards import BigImage, ImageGallery, ItemsList
-from alice_types.response.directives import AudioPlayer, StartAccountLinking
+from alice_types.response.directives import Directives
 
 
 class TextToSpeechModel(BaseModel, ExcludeUnsetMixin):
@@ -37,7 +37,4 @@ class Response(TextToSpeechModel):
     ]] = Field(default=None, json_schema_extra={"exclude_unset": True})
     buttons: Optional[List[Button]] = Field(default_factory=list, json_schema_extra={"exclude_unset": True})
     end_session: bool = Field(default=False, json_schema_extra={"exclude_unset": True})
-    directives: Optional[Union[
-        AudioPlayer,
-        StartAccountLinking
-    ]] = Field(default=None, json_schema_extra={"exclude_unset": True})
+    directives: Optional[Directives] = Field(default=None, json_schema_extra={"exclude_unset": True})

@@ -6,9 +6,9 @@ from .audio import (
     AudioPlayerStream,
     AudioActionType,
     AudioPlayerPlay,
-    AudioPlayerStop,
-    AudioPlayer
+    AudioPlayerStop
 )
+from .main import Directives
 
 __all__ = [
     "AudioPlayerImage",
@@ -18,6 +18,6 @@ __all__ = [
     "AudioActionType",
     "AudioPlayerPlay",
     "AudioPlayerStop",
-    "AudioPlayer",
-    "StartAccountLinking"
+    "StartAccountLinking",
+    "Directives"
 ]
