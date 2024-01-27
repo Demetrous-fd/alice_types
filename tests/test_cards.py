@@ -1,6 +1,6 @@
 import pytest
 
-from alice_types import cards
+from alice_types.response import cards
 import dataset
 
 

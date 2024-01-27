@@ -1,6 +1,6 @@
 import pytest
 
-from alice_types.session import Session, User, Application
+from alice_types.request.session import Session, User, Application
 import dataset
 
 

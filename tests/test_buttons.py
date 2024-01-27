@@ -1,6 +1,6 @@
 import pytest
 
-from alice_types import Button
+from alice_types.response import Button
 import dataset
 
 

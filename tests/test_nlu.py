@@ -1,6 +1,6 @@
 import pytest
 
-from alice_types import NaturalLanguageUnderstanding
+from alice_types.request import NaturalLanguageUnderstanding
 import dataset
 
 

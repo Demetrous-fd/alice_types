@@ -2,14 +2,14 @@ from typing import Union
 
 from pydantic import BaseModel, Field
 
-from alice_types.request import (
-    RequestAudio,
-    RequestPurchase,
-    RequestShow,
-    RequestSimpleUtterance,
-    RequestButtonPressed
-)
-from alice_types import State, Meta, Session
+from alice_types.request.meta import Meta
+from alice_types.request.state import State
+from alice_types.request.session import Session
+from alice_types.request.type.show import RequestShow
+from alice_types.request.type.audio import RequestAudio
+from alice_types.request.type.purchase import RequestPurchase
+from alice_types.request.type.button import RequestButtonPressed
+from alice_types.request.type.simple import RequestSimpleUtterance
 
 
 class AliceRequest(BaseModel):

@@ -1,6 +1,6 @@
 import pytest
 
-from alice_types import Markup
+from alice_types.request import Markup
 import dataset
 
 

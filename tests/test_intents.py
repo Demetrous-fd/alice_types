@@ -1,6 +1,6 @@
 import pytest
 
-from alice_types import Intent
+from alice_types.request import Intent
 import dataset
 
 

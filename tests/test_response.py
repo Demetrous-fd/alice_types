@@ -1,6 +1,6 @@
 import pytest
 
-import alice_types
+from alice_types.response import AliceResponse
 import dataset
 
 
@@ -13,5 +13,5 @@ import dataset
 )
 def test_alice_response(value, expected, raise_handler):
     with raise_handler:
-        alice = alice_types.AliceResponse.model_validate_json(value.string)
+        alice = AliceResponse.model_validate_json(value.string)
         assert alice.model_dump_json(exclude_none=True).encode() == expected

@@ -2,11 +2,11 @@ from typing import List, Optional, Union
 
 from pydantic import BaseModel, Field, field_validator
 
-from alice_types import Button
+from alice_types.response import Button
 from alice_types.mixin import ExcludeUnsetMixin
 from alice_types.validators import validate_tts_size
-from alice_types.cards import BigImage, ImageGallery, ItemsList
-from alice_types.directives import AudioPlayer, StartAccountLinking
+from alice_types.response.cards import BigImage, ImageGallery, ItemsList
+from alice_types.response.directives import AudioPlayer, StartAccountLinking
 
 
 class TextToSpeechModel(BaseModel, ExcludeUnsetMixin):

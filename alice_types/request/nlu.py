@@ -2,8 +2,8 @@ from typing import List, Union
 
 from pydantic import BaseModel, Field
 
-from alice_types import Intent, IntentType
-from alice_types import entity
+from alice_types.request.intents import Intent, IntentType
+from alice_types.request import entity
 
 
 class NaturalLanguageUnderstanding(BaseModel):

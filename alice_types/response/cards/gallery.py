@@ -1,8 +1,8 @@
 from typing import Literal
 
-from pydantic import BaseModel, Field, conlist, model_validator
+from pydantic import BaseModel, Field, conlist
 
-from alice_types.cards.base import CardType, CardItem
+from alice_types.response.cards.base import CardType, CardItem
 
 
 class ImageGallery(BaseModel):

@@ -57,7 +57,7 @@ def test_audio_request(value, expected, has_error, raise_handler):
         audio_request = request.RequestAudio.model_validate_json(value.string)
         
         if has_error:
-            assert isinstance(audio_request.error, request.audio.RequestAudioError) and audio_request.is_error()
+            assert isinstance(audio_request.error, request.RequestAudioError) and audio_request.is_error()
         else:
             assert audio_request.error is None and audio_request.is_error() is False
             

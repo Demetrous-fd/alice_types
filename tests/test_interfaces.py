@@ -1,6 +1,6 @@
 import pytest
 
-from alice_types import Interfaces
+from alice_types.request import Interfaces
 
 import dataset
 

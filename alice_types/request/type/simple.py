@@ -2,7 +2,7 @@ from typing import Optional, Literal
 
 from pydantic import BaseModel, Field, field_validator
 
-from alice_types import Markup, NaturalLanguageUnderstanding
+from alice_types.request import Markup, NaturalLanguageUnderstanding
 from alice_types.validators import validate_dict_size
 
 

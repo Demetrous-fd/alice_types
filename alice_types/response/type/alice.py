@@ -2,10 +2,10 @@ from typing import Optional, Union
 
 from pydantic import BaseModel, Field, field_validator
 
-from alice_types import Analytics
+from alice_types.response import Analytics
 from alice_types.mixin import ExcludeUnsetMixin
 from alice_types.validators import validate_dict_size
-from alice_types.response import ShowResponse, Response
+from alice_types.response.type import ShowResponse, Response
 
 
 class AliceResponse(BaseModel, ExcludeUnsetMixin):

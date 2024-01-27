@@ -1,6 +1,6 @@
 import pytest
 
-from alice_types.directives import audio
+from alice_types.response.directives import audio
 import dataset
 
 

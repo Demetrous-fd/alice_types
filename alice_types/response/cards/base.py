@@ -3,7 +3,7 @@ from enum import Enum
 
 from pydantic import BaseModel, Field
 
-from alice_types import Button
+from alice_types.response import Button
 from alice_types.mixin import ExcludeUnsetMixin
 
 

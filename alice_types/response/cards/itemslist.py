@@ -2,9 +2,9 @@ from typing import Optional, Literal
 
 from pydantic import BaseModel, Field, conlist
 
-from alice_types.cards.base import CardItem, CardType
+from alice_types.response.cards.base import CardItem, CardType
 from alice_types.mixin import ExcludeUnsetMixin
-from alice_types import Button
+from alice_types.response import Button
 
 
 class Header(BaseModel):

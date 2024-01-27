@@ -5,7 +5,7 @@ from uuid import uuid4
 from pydantic import BaseModel, Field, UUID4, field_serializer, field_validator
 
 from alice_types.validators import validate_tts_size
-from alice_types.response import TextToSpeechModel
+from alice_types.response.type import TextToSpeechModel
 
 
 class ShowItemMeta(BaseModel):

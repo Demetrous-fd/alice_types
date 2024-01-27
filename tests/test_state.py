@@ -1,7 +1,7 @@
 import pytest
 import orjson
 
-import alice_types
+from alice_types import request
 import dataset
 import schemes
 
@@ -16,7 +16,7 @@ import schemes
 )
 def test_state(value, expected, raise_handler):
     with raise_handler:
-        state = alice_types.State.model_validate_json(value.string)
+        state = request.State.model_validate_json(value.string)
         assert state.model_dump_json(exclude_none=True).encode() == expected
 
 
@@ -27,7 +27,7 @@ def test_state_with_custom_fields_type(override_state_field):
         "application": {"storage": {"last_login": "01.01.1900"}}
     })
     
-    state = alice_types.State.model_validate_json(data)
+    state = request.State.model_validate_json(data)
     assert isinstance(state.session, schemes.SessionState)
     assert isinstance(state.user, schemes.UserState)
     assert isinstance(state.application, dict)

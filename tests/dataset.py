@@ -4,8 +4,16 @@ from typing import Callable, Any, Optional
 import pytest
 import orjson
 
-from alice_types import InterfaceType, SlotsType, State, entity, request
-from alice_types.directives import audio
+from alice_types.request import (
+    InterfaceType, 
+    SlotsType, 
+    State, 
+    entity, 
+    RequestAudioType, 
+    RequestAudioErrorType
+)
+from alice_types.response import directives
+from alice_types import request
 
 
 # TODO: Разбить файл
@@ -1423,14 +1431,14 @@ REQUEST_AUDIO_ERROR = [
     ref(
         key="REQUEST_AUDIO_ERROR-1",
         obj=ValueField({
-            "type": request.audio.RequestAudioErrorType.MEDIA_ERROR_UNKNOWN,
+            "type": RequestAudioErrorType.MEDIA_ERROR_UNKNOWN,
             "message": "Что-то пошло не так 🙃"
         })
     ),
     ref(
         key="REQUEST_AUDIO_ERROR-2",
         obj=ValueField({
-            "type": request.audio.RequestAudioErrorType.MEDIA_ERROR_SERVICE_UNAVAILABLE,
+            "type": RequestAudioErrorType.MEDIA_ERROR_SERVICE_UNAVAILABLE,
             "message": "указанный URL трека недоступен или некорректен."
         })
     ),
@@ -1451,7 +1459,7 @@ REQUEST_AUDIO = {
             "value": ref(
                 key=f"REQUEST_AUDIO:ERROR-2",
                 obj=ValueField({
-                    "type": request.audio.RequestAudioType.AUDIO_PLAYER_PLAYBACK_FAILED
+                    "type": RequestAudioType.AUDIO_PLAYER_PLAYBACK_FAILED
                 })
             ),
             "expected": None,
@@ -1471,13 +1479,13 @@ REQUEST_AUDIO = {
                 "expected": ref(f"REQUEST_AUDIO:{request_type}:NOT_EMPTY").string,
                 "has_error": False,
                 "raise_handler": does_not_raise()
-            } for request_type in list(request.audio.RequestAudioType._value2member_map_.keys())[0: 4]
+            } for request_type in list(RequestAudioType._value2member_map_.keys())[0: 4]
         ],
         {
             "value": ref(
                 key="REQUEST_AUDIO:AudioPlayer.PlaybackFailed:NOT_EMPTY-1",
                 obj=ValueField({
-                    "type": request.audio.RequestAudioType.AUDIO_PLAYER_PLAYBACK_FAILED,
+                    "type": RequestAudioType.AUDIO_PLAYER_PLAYBACK_FAILED,
                     "error": ref(key="REQUEST_AUDIO_ERROR-1").obj
                 })
             ),
@@ -1489,7 +1497,7 @@ REQUEST_AUDIO = {
             "value": ref(
                 key="REQUEST_AUDIO:AudioPlayer.PlaybackFailed:NOT_EMPTY-2",
                 obj=ValueField({
-                    "type": request.audio.RequestAudioType.AUDIO_PLAYER_PLAYBACK_FAILED,
+                    "type": RequestAudioType.AUDIO_PLAYER_PLAYBACK_FAILED,
                     "error": ref(key="REQUEST_AUDIO_ERROR-2").obj
                 })
             ),
@@ -2338,7 +2346,7 @@ AUDIO_PLAYER_DIRECTIVE = {
                 })
             ),
             "expected": ref("AUDIO_DIRECTIVE:Play:NOT_EMPTY-1").string,
-            "command": audio.AudioPlayerPlay,
+            "command": directives.audio.AudioPlayerPlay,
             "raise_handler": does_not_raise()
         },
         {
@@ -2362,7 +2370,7 @@ AUDIO_PLAYER_DIRECTIVE = {
                 })
             ),
             "expected": ref("AUDIO_DIRECTIVE:Play:NOT_EMPTY-2").string,
-            "command": audio.AudioPlayerPlay,
+            "command": directives.audio.AudioPlayerPlay,
             "raise_handler": does_not_raise()
         },
         {
@@ -2382,7 +2390,7 @@ AUDIO_PLAYER_DIRECTIVE = {
                 })
             ),
             "expected": ref("AUDIO_DIRECTIVE:Play:NOT_EMPTY-3").string,
-            "command": audio.AudioPlayerPlay,
+            "command": directives.audio.AudioPlayerPlay,
             "raise_handler": does_not_raise()
         },
         {
@@ -2395,7 +2403,7 @@ AUDIO_PLAYER_DIRECTIVE = {
                 })
             ),
             "expected": ref("AUDIO_DIRECTIVE:Stop:NOT_EMPTY-1").string,
-            "command": audio.AudioPlayerStop,
+            "command": directives.audio.AudioPlayerStop,
             "raise_handler": does_not_raise()
         },
     ],

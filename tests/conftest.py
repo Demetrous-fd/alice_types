@@ -2,27 +2,27 @@ from copy import deepcopy
 
 import pytest
 
-import alice_types
+from alice_types import request
 import schemes
 
 
 @pytest.fixture()
 def override_state_field():
-    old_model = deepcopy(alice_types.State)
+    old_model = deepcopy(request.State)
 
-    alice_types.State.extend_session_model(schemes.SessionState)
-    alice_types.State.extend_user_model(schemes.UserState)
+    request.State.extend_session_model(schemes.SessionState)
+    request.State.extend_user_model(schemes.UserState)
 
     yield
 
-    alice_types.State = old_model
+    request.State = old_model
 
 
 @pytest.fixture()
 def override_purchase_payload_request_field():
-    old_model = deepcopy(alice_types.request.RequestPurchase)
-    alice_types.request.RequestPurchase.extend_payload_model(schemes.PurchasePayload)
+    old_model = deepcopy(request.RequestPurchase)
+    request.RequestPurchase.extend_payload_model(schemes.PurchasePayload)
 
     yield
 
-    alice_types.request.RequestPurchase = old_model
+    request.RequestPurchase = old_model

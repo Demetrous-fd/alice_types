@@ -3,7 +3,7 @@ from typing import Union, Optional, Literal
 from pydantic import BaseModel, Field
 
 from alice_types.mixin import AvailableMixin
-from alice_types import SlotsType
+from alice_types.request.slots import SlotsType
 
 
 class EntityValueFio(BaseModel, AvailableMixin):

@@ -1,6 +1,6 @@
 import pytest
 
-from alice_types import Analytics, AnalyticsEvent
+from alice_types.response import Analytics, AnalyticsEvent
 import dataset
 
 

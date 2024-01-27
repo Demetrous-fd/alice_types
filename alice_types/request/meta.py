@@ -4,7 +4,7 @@ import pytz
 
 from pydantic import BaseModel, Field, field_validator
 
-from alice_types import Interfaces
+from alice_types.request.interfaces import Interfaces
 
 # TODO: Возможно flags появляется при запуске со станций, надо уточнить
 # https://github.com/mahenzon/aioalice/blob/e66615138bf6ae4883154de7fe19a9f8c8c065bc/tests/_dataset.py#L216

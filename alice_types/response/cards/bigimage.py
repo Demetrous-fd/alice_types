@@ -2,7 +2,7 @@ from typing import Literal, Optional
 
 from pydantic import Field
 
-from alice_types.cards.base import CardItem, CardType
+from alice_types.response.cards.base import CardItem, CardType
 
 
 class BigImage(CardItem):

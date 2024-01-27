@@ -1,6 +1,6 @@
 import pytest
 
-from alice_types import Meta
+from alice_types.request import Meta
 import dataset
 
 
