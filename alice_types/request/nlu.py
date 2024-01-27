@@ -13,6 +13,7 @@ class NaturalLanguageUnderstanding(BaseModel):
         entity.EntityGeo, 
         entity.EntityDatetime,
         entity.EntityFio,
-        entity.EntityBase
+        entity.EntityBase,
+        dict
     ]] = Field(default_factory=list) # TODO: DynamicFieldsTypeMixin + tests
     intents: dict[Union[IntentType, str], Intent] = Field(default_factory=dict) # TODO: DynamicFieldsTypeMixin + tests
