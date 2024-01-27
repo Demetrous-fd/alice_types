@@ -69,7 +69,6 @@ class EntityDatetime(EntityBase):
     value: EntityValueDatetime = Field(...)
 
 
-# # TODO: Проверить реализован ли этот слот
-# class EntityString(EntityBase):
-#     type: Literal[SlotsType.YANDEX_STRING] = Field(...)
-#     value: dict = Field(...)
+class EntityString(EntityBase):
+    type: Literal[SlotsType.YANDEX_STRING] = Field(...)
+    value: str = Field(...)

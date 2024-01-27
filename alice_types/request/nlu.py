@@ -9,7 +9,8 @@ from alice_types.request import entity
 class NaturalLanguageUnderstanding(BaseModel):
     tokens: List[str] = Field(default_factory=list)
     entities: List[Union[
-        entity.EntityNumber, 
+        entity.EntityNumber,
+        entity.EntityString,
         entity.EntityGeo, 
         entity.EntityDatetime,
         entity.EntityFio,
