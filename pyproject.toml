@@ -9,10 +9,9 @@ authors = [
   { name="LazyDeus", email="dimaprodeus@yandex.ru" },
 ]
 description = "Pydantic модели для протокола Алисы."
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
