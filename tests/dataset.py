@@ -1744,7 +1744,24 @@ ALICE_REQUEST = {
                 },
                 "raise_handler": does_not_raise()
             } for index, request_type in enumerate(REQUEST_AUDIO["NOT_EMPTY"], start=1)
-        ]
+        ],
+        {
+            "value": ref(
+                key="ALICE_REQUEST:ACCOUNT_LINKING_COMPLETE",
+                obj=ValueField({
+                    "meta": ref(key="META:NOT_EMPTY-1").obj,
+                    "session": ref(key="SESSION:NOT_EMPTY-1").obj,
+                    "state": ref(key="STATE:NOT_EMPTY-1").obj,
+                    "version": "1.0",
+                    "account_linking_complete_event": {}
+                })
+            ),
+            "expected": ref("ALICE_REQUEST:ACCOUNT_LINKING_COMPLETE").string,
+            "check_type": {
+                "request": type(None)
+            },
+            "raise_handler": does_not_raise()
+        },
     ],
     "ERROR": [
         {
