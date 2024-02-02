@@ -1660,6 +1660,22 @@ ALICE_REQUEST = {
         },
         {
             "value": ref(
+                key="ALICE_REQUEST:REQUEST_SIMPLE_UTTERANCE:NOT_EMPTY-3",
+                obj=ValueField({
+                    "meta": ref(key="META:NOT_EMPTY-1").obj,
+                    "request": ref(key="REQUEST_SIMPLE_UTTERANCE:NOT_EMPTY-2").obj,
+                    "session": ref(key="SESSION:NOT_EMPTY-1").obj,
+                    "version": "1.0",
+                })
+            ),
+            "expected": ref("ALICE_REQUEST:REQUEST_SIMPLE_UTTERANCE:NOT_EMPTY-3").string,
+            "check_type": {
+                "request": request.RequestSimpleUtterance
+            },
+            "raise_handler": does_not_raise()
+        },
+        {
+            "value": ref(
                 key="ALICE_REQUEST:REQUEST_BUTTON_PRESSED:NOT_EMPTY-1",
                 obj=ValueField({
                     "meta": ref(key="META:NOT_EMPTY-1").obj,

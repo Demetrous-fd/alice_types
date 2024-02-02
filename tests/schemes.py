@@ -6,11 +6,11 @@ from pydantic import BaseModel, Field
 
 
 class PurchasePayload(BaseModel):
-        id: str = Field(...)
-        status: str =  Field(...)
-        paid: bool = Field(...)
-        amount: Decimal = Field(...)
-        currency: Optional[str] = Field(default="RUB")
+    id: str = Field(...)
+    status: str = Field(...)
+    paid: bool = Field(...)
+    amount: Decimal = Field(...)
+    currency: Optional[str] = Field(default="RUB")
 
 
 class GameState(str, Enum):

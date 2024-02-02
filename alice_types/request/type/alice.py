@@ -24,7 +24,7 @@ class AliceRequest(BaseModel):
         ]
     ] = Field(default=None)
     session: Session = Field(...)
-    state: State = Field(...)
+    state: Optional[State] = Field(default=None)
     version: str = Field(...)
     account_linking_complete_event: Optional[dict] = Field(default=None)
 
