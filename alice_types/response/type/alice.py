@@ -11,9 +11,30 @@ from alice_types.response.type import ShowResponse, Response
 class AliceResponse(BaseModel, ExcludeUnsetMixin):
     """
     Максимальный размер ответа составляет 131072 байт / 128 КибиБайт
+
+    Пример 1:
+    ```python
+    reply = AliceResponse(
+        response=Response(
+            text="Привет 🖐"
+        ),
+        session_state={
+            "current_state": "START"
+        }
+    )
+    ```
+
+    Пример 2:
+    ```python
+    reply = AliceResponse()
+    reply.response.text = "Привет 🖐"
+    reply.session_state = {
+        "current_state": "START"
+    }
+    ```
     """
     response: Union[ShowResponse, Response] = Field(
-        default=...,
+        default_factory=Response,
         description="Данные для ответа пользователю."
     )
     session_state: Optional[dict] = Field(

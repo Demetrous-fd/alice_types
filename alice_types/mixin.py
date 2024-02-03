@@ -6,15 +6,24 @@ from pydantic import BaseModel, model_validator, ValidationError, model_serializ
 
 class AvailableMixin:
     def available(self) -> List[str]:
+        """
+        Возвращает список доступных атрибутов объекта, у которых значение не равно None.
+        """
         available = []
         for name, value in self.__dict__.items():
             if value is not None:
                 available.append(name)
-        
+
         return available
 
 
 class ExcludeUnsetMixin:
+    """
+    Только для pydantic моделей.
+    Исключает неустановленные поля при сериализации (Есть причины не использовать стандартный exclude_unset)
+    У поля в Field должен быть задан параметр: json_schema_extra={"exclude_unset": True}
+    """
+
     @model_serializer
     def _serialize(self) -> dict:
         __exclude_if_unset__ = set()
@@ -59,7 +68,7 @@ class DynamicFieldsTypeMixin:
     Example.extend_field_type("payload", ExtendPayload)
     """
     __extended_fields_type__: ClassVar[dict[str, List[Type[BaseModel]]]] = defaultdict(list)
-    
+
     @classmethod
     def extend_field_type(cls, field_name: str, new_type: Type[BaseModel]) -> None:
         """
@@ -74,19 +83,19 @@ class DynamicFieldsTypeMixin:
             raise ValueError("The type must be inherited from pydantic.BaseModel")
         if new_type in cls.__extended_fields_type__:
             return
-        
+
         fields_name = [field_name]
-        if alias := cls.model_fields[field_name].alias: # type: ignore
+        if alias := cls.model_fields[field_name].alias:  # type: ignore
             fields_name.append(alias)
-        
+
         for field in fields_name:
             cls.__extended_fields_type__[field].append(new_type)
-        
+
         field_annotation = cls.__annotations__[field_name]
-        
+
         field_annotation.__args__ = (new_type, *field_annotation.__args__)
         cls.__annotations__[field_name] = field_annotation
-        
+
     @model_validator(mode="before")
     @classmethod
     def __validate_model_with_extended_fields(cls, data: Any) -> Any:
@@ -95,11 +104,13 @@ class DynamicFieldsTypeMixin:
             for _type_ in types:
                 if any([isinstance(value, dict), isinstance(value, bytes), isinstance(value, str)]) is False:
                     continue
-                
+
                 try:
-                    value = _type_(**value) if isinstance(value, dict) else _type_.model_validate_json(value) # type: ignore
+                    value = _type_(**value) if isinstance(value, dict) else _type_.model_validate_json(
+                        value
+                    )  # type: ignore
                     data[field] = value
                 except ValidationError:
                     continue
-                
+
         return data

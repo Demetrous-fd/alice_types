@@ -1,4 +1,5 @@
 import pytest
+from alice_types.request.entity import Entities
 
 import dataset
 
@@ -31,3 +32,16 @@ def test_entities(value, expected, type, raise_handler):
     with raise_handler:        
         value = type.model_validate_json(value.string)
         assert value.model_dump_json(exclude_none=True).encode() == expected
+
+
+@pytest.mark.parametrize(
+    ["data", "select", "expected"],
+    [
+        *[data.values() for data in dataset.ENTITY["GET"]]
+    ]
+)
+def test_entities_get(data, select, expected):
+    entities = Entities.model_validate(data)
+
+    selected_entities = entities.get(select)
+    assert selected_entities == expected

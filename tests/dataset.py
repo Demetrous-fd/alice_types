@@ -763,6 +763,40 @@ ENTITY = {
             "raise_handler": pytest.raises(ValueError)
         },
     ],
+    "GET": [
+        {
+            "data": [
+                ref("ENTITY:NOT_EMPTY:GEO-1").obj,
+                ref("ENTITY:NOT_EMPTY:DATETIME-2").obj,
+            ],
+            "select": SlotsType.YANDEX_DATETIME,
+            "expected": [
+                entity.EntityDatetime.model_validate(ref("ENTITY:NOT_EMPTY:DATETIME-2").obj)
+            ]
+        },
+        {
+            "data": [
+                ref("ENTITY:NOT_EMPTY:FIO-1").obj,
+                ref("ENTITY:NOT_EMPTY:GEO-1").obj,
+                ref("ENTITY:NOT_EMPTY:FIO-2").obj,
+            ],
+            "select": SlotsType.YANDEX_FIO,
+            "expected": [
+                entity.EntityFio.model_validate(ref("ENTITY:NOT_EMPTY:FIO-1").obj),
+                entity.EntityFio.model_validate(ref("ENTITY:NOT_EMPTY:FIO-2").obj),
+            ]
+        },
+        {
+            "data": [
+                ref("ENTITY:NOT_EMPTY:FIO-1").obj,
+                ref("ENTITY:NOT_EMPTY:GEO-1").obj,
+            ],
+            "select": SlotsType.YANDEX_GEO,
+            "expected": [
+                entity.EntityGeo.model_validate(ref("ENTITY:NOT_EMPTY:GEO-1").obj)
+            ]
+        }
+    ]
 }
 
 META = {
@@ -854,14 +888,6 @@ NLU = {
             "expected": ref("NLU:EMPTY-1").string,
             "raise_handler": does_not_raise()
         },
-        {
-            "value": ref(
-                key="NLU:EMPTY-2",
-                obj=ref("EMPTY")
-            ),
-            "expected": ref("NLU:EMPTY-1").string,
-            "raise_handler": does_not_raise()
-        }
     ],
     "NOT_EMPTY": [
         {
@@ -974,7 +1000,18 @@ NLU = {
             ),
             "expected": None,
             "raise_handler": pytest.raises(ValueError)
-        }
+        },
+        {
+            "value": ref(
+                key="NLU:ERROR-2",
+                obj=ValueField({
+                    "tokens": [],
+                    "intents": {}
+                })
+            ),
+            "expected": None,
+            "raise_handler": pytest.raises(ValueError)
+        },
     ],
 }
 
@@ -2720,39 +2757,22 @@ ALICE_RESPONSE = {
             "expected": ref("ALICE_RESPONSE:NOT_EMPTY-11").string,
             "raise_handler": does_not_raise()
         },
+        {
+            "value": ref(
+                key="ALICE_RESPONSE:NOT_EMPTY-12",
+                obj=ValueField(
+                    obj={},
+                    json_string=b'{"response":{"text":""},"version":"1.0"}'
+                )
+            ),
+            "expected": ref("ALICE_RESPONSE:NOT_EMPTY-12").string,
+            "raise_handler": does_not_raise()
+        },
     ],
     "ERROR": [
         {
             "value": ref(
                 key="ALICE_RESPONSE:ERROR-1",
-                obj=ValueField({})
-            ),
-            "expected": None,
-            "raise_handler": pytest.raises(ValueError)
-        },
-        {
-            "value": ref(
-                key="ALICE_RESPONSE:ERROR-2",
-                obj=ValueField({
-                    "version": "1.0"
-                })
-            ),
-            "expected": None,
-            "raise_handler": pytest.raises(ValueError)
-        },
-        {
-            "value": ref(
-                key="ALICE_RESPONSE:ERROR-3",
-                obj=ValueField({
-                    "end_session": None
-                })
-            ),
-            "expected": None,
-            "raise_handler": pytest.raises(ValueError)
-        },
-        {
-            "value": ref(
-                key="ALICE_RESPONSE:ERROR-4",
                 obj=ValueField({
                     "response": {
                         "text": "1" * 1025
@@ -2765,7 +2785,7 @@ ALICE_RESPONSE = {
         },
         {
             "value": ref(
-                key="ALICE_RESPONSE:ERROR-5",
+                key="ALICE_RESPONSE:ERROR-2",
                 obj=ValueField({
                     "response": {
                         "tts": "1" * 1025

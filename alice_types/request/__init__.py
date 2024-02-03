@@ -19,6 +19,7 @@ from .entity import (
     EntityValueFio,
     EntityValueDatetime,
     EntityTokens,
+    Entities
 )
 
 from .type.audio import (

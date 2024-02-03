@@ -14,4 +14,4 @@ import dataset
 def test_alice_response(value, expected, raise_handler):
     with raise_handler:
         alice = AliceResponse.model_validate_json(value.string)
-        assert alice.model_dump_json(exclude_none=True).encode() == expected
+        assert alice.model_dump_json().encode() == expected
