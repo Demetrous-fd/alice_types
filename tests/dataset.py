@@ -1,5 +1,6 @@
 from contextlib import nullcontext as does_not_raise
 from typing import Callable, Any, Optional
+from datetime import datetime
 
 import pytest
 import orjson
@@ -14,6 +15,8 @@ from alice_types.request import (
 )
 from alice_types.response import directives
 from alice_types import request
+
+FAKE_DATETIME = datetime(year=2024, month=1, day=1)
 
 
 # TODO: Разбить файл
@@ -553,9 +556,18 @@ ENTITY_VALUE = {
             ],
             "type": dict,
             "raise_handler": does_not_raise()
-        },
-        # TODO: Add custom type check
+        }
     ],
+    "TO_DATETIME": [
+        {
+            "value": ref("ENTITY_VALUE:NOT_EMPTY:DATETIME-1").obj,
+            "expected": datetime(year=2023, month=12, day=31)
+        },
+        {
+            "value": ref("ENTITY_VALUE:NOT_EMPTY:DATETIME-2").obj,
+            "expected": datetime(year=1982, month=9, day=15, hour=22, minute=30)
+        },
+    ]
 }
 
 ENTITY = {
@@ -689,7 +701,7 @@ ENTITY = {
             "type": entity.EntityDatetime,
             "raise_handler": does_not_raise()
         },
-        {
+        {  # Возможно, это стоит удалить 🗿
             "value": ref(
                 key="ENTITY:NOT_EMPTY:DICT-1",
                 obj=ValueField({
@@ -1081,7 +1093,6 @@ STATE = {
             "expected": ref("STATE:NOT_EMPTY-3").string,
             "raise_handler": does_not_raise()
         },
-        # TODO: add custom state check
     ],
     "ERROR": [
         {

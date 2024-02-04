@@ -1,6 +1,8 @@
 from typing import Union, Optional, Literal, List
+from datetime import datetime
 
 from pydantic import BaseModel, Field, RootModel
+from dateutil.relativedelta import relativedelta
 
 from alice_types.mixin import AvailableMixin
 from alice_types.request.slots import SlotsType
@@ -48,6 +50,20 @@ class EntityValueDatetime(BaseModel, AvailableMixin):
     minute: Optional[int] = Field(default=None)
     minute_is_relative: Optional[bool] = Field(default=None)
 
+    def to_datetime(self) -> datetime:
+        date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+
+        data = {
+            "years" if self.year_is_relative is True else "year": self.year,
+            "months" if self.month_is_relative is True else "month": self.month,
+            "days" if self.day_is_relative is True else "day": self.day,
+            "hours" if self.hour_is_relative is True else "hour": self.hour,
+            "minutes" if self.minute is True else "minute": self.minute,
+        }
+        timedelta = relativedelta(**data)
+        date += timedelta
+        return date
+
 
 class EntityTokens(BaseModel):
     start: int = Field(...)
@@ -84,6 +100,9 @@ class EntityFio(EntityBase):
 class EntityDatetime(EntityBase):
     type: Literal[SlotsType.YANDEX_DATETIME] = Field(...)
     value: EntityValueDatetime = Field(...)
+
+    def to_datetime(self) -> datetime:
+        return self.value.to_datetime()
 
 
 class EntityString(EntityBase):
