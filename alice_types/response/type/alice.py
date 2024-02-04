@@ -4,11 +4,11 @@ from pydantic import BaseModel, Field, field_validator
 
 from alice_types.response import Analytics
 from alice_types.mixin import ExcludeUnsetMixin
-from alice_types.validators import validate_dict_size
+from alice_types.validators import validate_dict_size, DynamicSize
 from alice_types.response.type import ShowResponse, Response
 
 
-class AliceResponse(BaseModel, ExcludeUnsetMixin):
+class AliceResponse(BaseModel, ExcludeUnsetMixin, validate_assignment=True):
     """
     Максимальный размер ответа составляет 131072 байт / 128 КибиБайт
 
@@ -75,20 +75,26 @@ class AliceResponse(BaseModel, ExcludeUnsetMixin):
         description="Версия протокола."
     )
 
+    validate_session_state_size = field_validator("session_state", mode="before")(
+        validate_dict_size(max_size=DynamicSize("session_state", 1024))
+    )
+
+    validate_user_state_size = field_validator("user_state_update", mode="before")(
+        validate_dict_size(max_size=DynamicSize("user_state_update", 1024))
+    )
+
+    validate_application_state_size = field_validator("application_state", mode="before")(
+        validate_dict_size(max_size=DynamicSize("application_state", 1024))
+    )
+
     @classmethod
     def set_session_state_limit_size(cls, max_size: int = 1024):
-        cls.validate_session_state_size = field_validator("session_state", mode="before")(
-            validate_dict_size(max_size=max_size)
-        )
+        DynamicSize("session_state", max_size)
 
     @classmethod
     def set_user_state_limit_size(cls, max_size: int = 1024):
-        cls.validate_user_state_size = field_validator("user_state_update", mode="before")(
-            validate_dict_size(max_size=max_size)
-        )
+        DynamicSize("user_state_update", max_size)
 
     @classmethod
     def set_application_state_limit_size(cls, max_size: int = 1024):
-        cls.validate_application_state_size = field_validator("application_state", mode="before")(
-            validate_dict_size(max_size=max_size)
-        )
+        DynamicSize("application_state", max_size)
