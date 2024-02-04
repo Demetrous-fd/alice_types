@@ -1,7 +1,7 @@
-from typing import Any, Optional
+from typing import Any, Optional, Union
 from enum import Enum
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, RootModel
 
 
 # TODO: Add other Build-In intents
@@ -17,6 +17,9 @@ class IntentType(str, Enum):
     YANDEX_BOOK_NAVIGATION_NEXT = "YANDEX.BOOK.NAVIGATION.NEXT"
     
 
-
 class Intent(BaseModel):
     slots: Optional[dict[str, Any]] = Field(default=None)
+
+
+class Intents(RootModel):
+    root: dict[Union[IntentType, str], Intent]
