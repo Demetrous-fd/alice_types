@@ -23,3 +23,12 @@ class Intent(BaseModel):
 
 class Intents(RootModel):
     root: dict[Union[IntentType, str], Intent]
+
+    def __len__(self) -> int:
+        return len(self.root)
+
+    def __iter__(self):
+        return iter(self.root)
+
+    def __getitem__(self, item):
+        return self.root[item]

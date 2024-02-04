@@ -1,11 +1,11 @@
-from typing import Union, Optional, Literal, List
+from typing import Union, Optional, Literal, List, Iterable
 from datetime import datetime
 
 from pydantic import BaseModel, Field, RootModel
 from dateutil.relativedelta import relativedelta
 
-from alice_types.mixin import AvailableMixin
 from alice_types.request.slots import SlotsType
+from alice_types.mixin import AvailableMixin
 
 
 class EntityValueFio(BaseModel, AvailableMixin):
@@ -143,4 +143,27 @@ class Entities(RootModel):
         Returns:
             Список сущностей заданного типа.
         """
-        return [entity for entity in self.root if entity.type == entity_type]
+        return [entity for entity in self if entity.type == entity_type]
+
+    def __len__(self) -> int:
+        return len(self.root)
+
+    def __iter__(self) -> Iterable[Union[
+        EntityNumber,
+        EntityString,
+        EntityGeo,
+        EntityDatetime,
+        EntityFio,
+        EntityBase
+    ]]:
+        return iter(self.root)
+
+    def __getitem__(self, item) -> Union[
+        EntityNumber,
+        EntityString,
+        EntityGeo,
+        EntityDatetime,
+        EntityFio,
+        EntityBase
+    ]:
+        return self.root[item]
