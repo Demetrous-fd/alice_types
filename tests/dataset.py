@@ -4,6 +4,7 @@ from datetime import datetime
 
 import pytest
 import orjson
+import pytz
 
 from alice_types.request import (
     InterfaceType,
@@ -561,10 +562,12 @@ ENTITY_VALUE = {
     "TO_DATETIME": [
         {
             "value": ref("ENTITY_VALUE:NOT_EMPTY:DATETIME-1").obj,
-            "expected": datetime(year=2023, month=12, day=31)
+            "timezone": "Europe/Moscow",
+            "expected": pytz.timezone("Europe/Moscow").localize(datetime(year=2023, month=12, day=31))
         },
         {
             "value": ref("ENTITY_VALUE:NOT_EMPTY:DATETIME-2").obj,
+            "timezone": None,
             "expected": datetime(year=1982, month=9, day=15, hour=22, minute=30)
         },
     ]

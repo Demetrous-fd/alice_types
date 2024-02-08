@@ -3,6 +3,7 @@ from datetime import datetime
 
 from pydantic import BaseModel, Field, RootModel
 from dateutil.relativedelta import relativedelta
+import pytz
 
 from alice_types.request.slots import SlotsType
 from alice_types.mixin import AvailableMixin
@@ -50,8 +51,19 @@ class EntityValueDatetime(BaseModel, AvailableMixin):
     minute: Optional[int] = Field(default=None)
     minute_is_relative: Optional[bool] = Field(default=None)
 
-    def to_datetime(self) -> datetime:
+    def to_datetime(
+            self,
+            timezone: Optional[Union[pytz.BaseTzInfo, str]] = None,
+            is_dst: bool = False
+    ) -> datetime:
+        if isinstance(timezone, str):
+            timezone = pytz.timezone(timezone)
+
         date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+
+        if timezone:
+            # http://russianpenguin.ru/2019/09/11/python-чем-плох-datetime-replace/
+            date = timezone.localize(date, is_dst)
 
         data = {
             "years" if self.year_is_relative is True else "year": self.year,
@@ -101,8 +113,12 @@ class EntityDatetime(EntityBase):
     type: Literal[SlotsType.YANDEX_DATETIME] = Field(...)
     value: EntityValueDatetime = Field(...)
 
-    def to_datetime(self) -> datetime:
-        return self.value.to_datetime()
+    def to_datetime(
+            self,
+            timezone: Optional[Union[pytz.BaseTzInfo, str]] = None,
+            is_dst: bool = False
+    ) -> datetime:
+        return self.value.to_datetime(timezone=timezone, is_dst=is_dst)
 
 
 class EntityString(EntityBase):

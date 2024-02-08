@@ -1,8 +1,8 @@
 from typing import List, Optional, Literal
 import locale
-import pytz
 
 from pydantic import BaseModel, Field, field_validator
+import pytz
 
 from alice_types.request.interfaces import Interfaces
 

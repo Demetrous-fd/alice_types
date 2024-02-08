@@ -23,15 +23,15 @@ def test_entities_value(value, expected, expected_fields, type, raise_handler):
 
 
 @pytest.mark.parametrize(
-    ["value", "expected"],
+    ["value", "timezone", "expected"],
     [
         *[data.values() for data in dataset.ENTITY_VALUE["TO_DATETIME"]]
     ]
 )
 @freeze_time(dataset.FAKE_DATETIME)
-def test_entity_to_datetime(value, expected):
+def test_entity_to_datetime(value, timezone, expected):
     entity_value = EntityValueDatetime.model_validate(value)
-    assert entity_value.to_datetime() == expected
+    assert entity_value.to_datetime(timezone=timezone) == expected
 
 
 @pytest.mark.parametrize(
