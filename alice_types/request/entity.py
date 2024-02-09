@@ -53,17 +53,12 @@ class EntityValueDatetime(BaseModel, AvailableMixin):
 
     def to_datetime(
             self,
-            timezone: Optional[Union[pytz.BaseTzInfo, str]] = None,
-            is_dst: bool = False
+            timezone: Optional[Union[pytz.BaseTzInfo, str]] = None
     ) -> datetime:
         if isinstance(timezone, str):
             timezone = pytz.timezone(timezone)
 
-        date = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-
-        if timezone:
-            # http://russianpenguin.ru/2019/09/11/python-чем-плох-datetime-replace/
-            date = timezone.localize(date, is_dst)
+        date = datetime.now(tz=timezone).replace(hour=0, minute=0, second=0, microsecond=0)
 
         data = {
             "years" if self.year_is_relative is True else "year": self.year,
