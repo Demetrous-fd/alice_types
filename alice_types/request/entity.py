@@ -110,10 +110,9 @@ class EntityDatetime(EntityBase):
 
     def to_datetime(
             self,
-            timezone: Optional[Union[pytz.BaseTzInfo, str]] = None,
-            is_dst: bool = False
+            timezone: Optional[Union[pytz.BaseTzInfo, str]] = None
     ) -> datetime:
-        return self.value.to_datetime(timezone=timezone, is_dst=is_dst)
+        return self.value.to_datetime(timezone=timezone)
 
 
 class EntityString(EntityBase):
