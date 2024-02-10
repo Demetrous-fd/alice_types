@@ -34,7 +34,8 @@ class EntityValueGeo(BaseModel, AvailableMixin):
 class EntityValueDatetime(BaseModel, AvailableMixin):
     """
     Доступные методы:
-    - available(self) -> Возвращает список доступных атрибутов объекта, у которых значение не равно None.
+    - available() -> Возвращает список доступных атрибутов объекта, у которых значение не равно None.
+    - to_datetime(timezone) -> Возвращает datetime.
     """
     year: Optional[int] = Field(default=None)
     year_is_relative: Optional[bool] = Field(default=None)

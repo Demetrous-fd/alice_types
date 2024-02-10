@@ -22,6 +22,9 @@ class Interfaces(BaseModel, AvailableMixin):
     payments: Optional[dict] = Field(default=None)
     
     def has(self, interface: Union[InterfaceType, INTERFACE_NAME]) -> bool:
+        """
+        Проверяет, существует ли этот интерфейс.
+        """
         if isinstance(interface, str) and interface not in InterfaceType._value2member_map_:
             raise ValueError(f"Interface: {interface} not exists")
         
