@@ -5,7 +5,7 @@
 ## Установка:
 
 ```shell
-pip install alice_types
+pip install alice-types
 ```
 
 ## Использование
