@@ -70,11 +70,11 @@ app.router.add_post('/', handler)
 
 В библиотеке имеются модели с динамически расширяемыми полями:
 
-- [request.State](https://github.com/Demetrous-fd/alice_types/examples/extend_fields/state.py)
+- [request.State](https://github.com/Demetrous-fd/alice_types/blob/main/examples/extend_fields/state.py)
     - State.extend_session_model(model: BaseModel)
     - State.extend_user_model(model: BaseModel)
     - State.extend_application_model(model: BaseModel)
-- [request.RequestPurchase.payload](https://github.com/Demetrous-fd/alice_types/examples/extend_fields/purchase.py)
+- [request.RequestPurchase.payload](https://github.com/Demetrous-fd/alice_types/blob/main/examples/extend_fields/purchase.py)
   - RequestPurchase.extend_payload_model(model: BaseModel)
 
 ### Ограничение размера хранилищ для модели ответа
@@ -184,8 +184,8 @@ async def handler(alice_request: AliceRequest):
 
 ### Примеры
 
-- [EchoBot](https://github.com/Demetrous-fd/alice_types/examples/base.py)
-- [Авторизация](https://github.com/Demetrous-fd/alice_types/examples/auth.py)
+- [EchoBot](https://github.com/Demetrous-fd/alice_types/blob/main/examples/base.py)
+- [Авторизация](https://github.com/Demetrous-fd/alice_types/blob/main/examples/auth.py)
 - Расширение типов полей:
-    - [request.State](https://github.com/Demetrous-fd/alice_types/examples/extend_fields/state.py)
-    - [request.RequestPurchase.payload](https://github.com/Demetrous-fd/alice_types/examples/extend_fields/purchase.py)
+    - [request.State](https://github.com/Demetrous-fd/alice_types/blob/main/examples/extend_fields/state.py)
+    - [request.RequestPurchase.payload](https://github.com/Demetrous-fd/alice_types/blob/main/examples/extend_fields/purchase.py)
