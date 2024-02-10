@@ -46,15 +46,14 @@ from aiohttp import web
 
 async def handler(request):
     body = await request.json()
-    alice_request = AliceRequest.model_validate_json(body)
+    alice_request = AliceRequest.model_validate(body)
 
     reply = AliceResponse()
 
     if alice_request.is_new_session():
         reply.response.text = "Привет, скажи что-нибудь и я это повторю"
-        return reply
-
-    reply.response.text = alice_request.request.original_utterance
+    else:
+        reply.response.text = alice_request.request.original_utterance
 
     body = reply.model_dump()
     return web.json_response(body)
@@ -62,6 +61,10 @@ async def handler(request):
 
 app = web.Application()
 app.router.add_post('/', handler)
+
+if __name__ == "__main__":
+    web.run_app(app)
+
 ```
 
 </details>
